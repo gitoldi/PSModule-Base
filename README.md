@@ -14,17 +14,17 @@ To see a list of changes in this version, refer to the [ Changelog ](CHANGELOG.m
 
 ---
 
-MarcelRijsbergen
+PSModule-Personal
 ================
-MarcelRijsbergen is the first attempt to setup and use a module. 
+PSModule-Personal is the first attempt to setup and use a module.
 The module consists of a set of functions.
 
 Import module
 -------------
-    C:\PS> Import-Module MarcelRijsbergen
+    C:\PS> Import-Module PSModule-Personal
 
 The module must be found in one of the standard module paths, zie '$env:PSModulePath'.
-In any of these folders a folder 'Modules' can be created or is already available in which the module file 'MarcelRijsbergen.psm1' will be looked for.
+In any of these folders a folder 'Modules' can be created or is already available in which the module file 'PSModule-Personal.psm1' will be looked for.
 
 For Further Learning:
 -----------------------------------
