@@ -20,7 +20,7 @@ PSModule-Personal is my first attempt to setup and use a module and keep track o
 The module consists of a set of functions.
 
 Thoughts:
-* Maybe I'll be using the build structure which is proposed by the '[ ModuleBuilder ]( https://github.com/PoshCode/ModuleBuilder )' setup.
+* Maybe I'll be using the build structure which is proposed by the '[ModuleBuilder]( https://github.com/PoshCode/ModuleBuilder )' setup.
 
 Import module
 -------------
