@@ -1,0 +1,27 @@
+TOPIC
+    about_PSModule-Personal
+
+SHORT DESCRIPTION
+    Een persoonlijke module.
+
+LONG DESCRIPTION
+    Dit project is een poging om de persoonlijke module te maken met behulp van 
+    GitHub (https://github.com/) en de voorgestelde ModuleBuilder (https://github.com/PoshCode/ModuleBuilder) 
+    manier van werken.
+
+    - ...
+
+EXAMPLES
+    Wat tekst.
+
+NOTE:
+    Wat tekst.
+
+TROUBLESHOOTING NOTE:
+    Wat tekst.
+
+SEE ALSO
+    Wat tekst.
+
+KEYWORDS
+      Module, Tools, personal

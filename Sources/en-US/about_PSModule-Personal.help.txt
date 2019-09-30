@@ -1,0 +1,26 @@
+TOPIC
+    about_PSModule-Personal
+
+SHORT DESCRIPTION
+    A personal module.
+
+LONG DESCRIPTION
+    This project is to build a personal module using GitHub (https://github.com/) and use the suggested ModuleBuilder (https://github.com/PoshCode/ModuleBuilder) way of working.
+
+    - Build a simple set of handy personal tools.
+    - ...
+
+EXAMPLES
+    Some text.
+
+NOTE:
+    Some text.
+
+TROUBLESHOOTING NOTE:
+    Some text.
+
+SEE ALSO
+    Some text.
+
+KEYWORDS
+      PowerShell, Module, Tools, personal

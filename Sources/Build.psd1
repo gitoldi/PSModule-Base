@@ -1,6 +1,6 @@
 @{
     Path = "PSModule-Personal.psd1"
-    OutputDirectory = "..\"
+    OutputDirectory = "$( $env:USERPROFILE )\Documenten\WindowsPowerShell\Modules"
     VersionedOutputDirectory = $true
     CopyDirectories = @( 'en-US', 'nl-NL' )
 }
