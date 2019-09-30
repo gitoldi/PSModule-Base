@@ -16,8 +16,11 @@ To see a list of changes in this version, refer to the [ Changelog ](CHANGELOG.m
 
 PSModule-Personal
 ================
-PSModule-Personal is the first attempt to setup and use a module.
+PSModule-Personal is my first attempt to setup and use a module and keep track of using GitHub.
 The module consists of a set of functions.
+
+Thoughts:
+* Maybe I'll be using the build structure which is proposed by the '[ ModuleBuilder ]( https://github.com/PoshCode/ModuleBuilder )' setup.
 
 Import module
 -------------
