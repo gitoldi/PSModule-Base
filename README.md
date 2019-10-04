@@ -1,29 +1,29 @@
 
-<h1>PSModule-Personal</h1>
+<h1 id='top'>PSModule-Personal</h1>
 PowerShell - A personal module. Using an already existing one to (partly) migrate to and get familiar with Git.
 
 To see a list of changes in this version, refer to the [Changelog](CHANGELOG.md).
 
-<hr />
+<h2>My first attempt to:</h2>
 
-<h1>Some Markdown guides</h1>
+* Setup and use GitHub.
+* Get familiar with and use [ModuleBuilder](https://github.com/PoshCode/ModuleBuilder) to prepare to create a module.
+    * A way of working to enable building a <module>.psm1 and use some sort of versioning.
+* So this repo only contains the files to *build* the module.
+
+Thoughts:
+* Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath issues. See the PowerShell GitHub.
+* Usage should be possible in both *PowerShell* and *PoerShell Core*.
+
+<h2>Some Markdown guides</h2>
 
 * [Markdown guide](https://www.markdownguide.org/basic-syntax/)
 * [John Gruder - markdown creator](https://daringfireball.net/projects/markdown/)
 * [GitHub mastering markdown](https://guides.github.com/features/mastering-markdown/)
 
-<hr />
+<h1 id='build'>Build Module</h1>
 
-<h1>PSModule-Personal</h1>
-
-PSModule-Personal is my first attempt to setup and use a module and keep track of using GitHub.
-The module consists of a set of simple functions.
-
-Thoughts:
-* Maybe I'll be using the build structure which is proposed by the '[ModuleBuilder](https://github.com/PoshCode/ModuleBuilder)' setup.
-* Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath issues. See the PowerShell GitHub.
-
-<h1>Import module</h1>
+<h1 id='import'>Import module</h1>
 The module must be found in one of the standard module paths, see the above mentioned issue.
 
 Since importing modules depends on your personal module tree and setup, in this README I use simple commands.
@@ -35,8 +35,9 @@ Personally I link PowerShell (folder WindowPowerShell and file Microsoft.PowerSh
 
 * [PowerShell](https://docs.microsoft.com/en-us/powershell/developer/module/modifying-the-psmodulepath-installation-path)
 
+<h1 id='folderroot'>Root folder (Module-Name)</h1>
 
-<h1>Root folder (Module-Name)</h1>
+After the module is build
 
 * File - CHANGELOG.md
     * This file.
@@ -55,6 +56,10 @@ Personally I link PowerShell (folder WindowPowerShell and file Microsoft.PowerSh
 * File - [Suffix.ps1](#suffix)
     * Used by ModuleBuilder.
     * The contents of this file will be put at the end of the created <module>.psm1 file containing all functions.
+* File - PSModule-Personal.psd1
+    * The manifest file for the module.
+* File - PSModule-Personal-Config.psd1
+    * An example PowerShell configuration file for a module.
 
 <h2 id="build">Build.ps1</h2>
 
@@ -62,7 +67,13 @@ Personally I link PowerShell (folder WindowPowerShell and file Microsoft.PowerSh
 
 <h2 id="suffix">Suffix.ps1</h2>
 
-<h1>Folder - Source</h1>
+<h2 id="suffix">PSModule-Personal.psd1</h2>
+
+<h2 id="suffix">PSModule-Personal-Config.psd1</h2>
+
+<h2 id="suffix">PSModule-Personal.[On, Off]</h2>
+
+<h1 id='foldersource'>Folder - Source</h1>
 
 * Subfolder - en-US
 * Subfolder - nl-NL
@@ -80,15 +91,8 @@ Personally I link PowerShell (folder WindowPowerShell and file Microsoft.PowerSh
 
 ## Subfolder - Public
 
-<h1>Build Module</h1>
+<h1>Tested on</h1>
 
-<h1>Update Module</h1>
-Copy the last build to the production module folder.
-Check modification date and copy if required:
-* CHANGELOG.md
-* README.md
-* tbd
-    * module_overview.html
-    * and other files that can be used by _DocTreeGenerator_
-
-PS > Robocopy.exe <path-to-folder-for-build>\Build\<module>\<module>\<version>\ <path-to-folder-for-modules>\<module>\<module>\ *.md /V /LEV:0
+Operation System | PowerShell | PowerShell Core
+-------------------------------------------------- | ---------- | ----------
+Microsoft Windows 10 Home | 5.1 | 

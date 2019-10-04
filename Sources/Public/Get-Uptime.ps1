@@ -1,4 +1,3 @@
-# Function Start : Get Uptime.
 Function Get-Uptime {
     <#
     .SYNOPSIS
@@ -19,6 +18,7 @@ Function Get-Uptime {
         Returns a time string with the uptime.
 
     .NOTES
+    Author      : Marcel Rijsbergen
     History:
 
     190512 MR
@@ -71,4 +71,3 @@ Function Get-Uptime {
     Write-Verbose 'System uptime since:' ( get-date $LastBoot ).DateTime '-' $TmpTxt
     Return $GetUptime
 }
-# Function End - Get-Uptime

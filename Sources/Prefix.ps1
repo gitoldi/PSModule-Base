@@ -6,7 +6,7 @@ Prefix part to a module.
 Prefix part to a module.
 Based on ModuleBuilder documentation.
 Use this prefix part to do some initialization for the module.
-Like : load config for this module to the $Global environment.
+Like : load config for this module.
 
 .EXAMPLE
 NA
@@ -18,7 +18,7 @@ NA
 NA
 
 .NOTES
-Copyright 2019-<today>, Marcel Rijsbergen.
+Copyright 2018-<today>, Marcel Rijsbergen.
     
 History:
 Do not forget to create a short modification text in CHANGELOG.md.
@@ -30,63 +30,95 @@ Do not forget to create a short modification text in CHANGELOG.md.
 - 1.0.2 Still struggling with -verbose.
 
 #>
+
+#Region 'Initialize.'
 [ CmdletBinding( )]
 
 param( )
 
-#Region 'Initialize.'
-$ScriptName = [ io.path ]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
+$CurCommand = $MyInvocation.MyCommand
+$ScriptName = [ io.path ]::GetFileNameWithoutExtension( $CurCommand.Name )
+$ScriptFolder = Split-Path $CurCommand.Path
+[ bool ] $CurDebug = $false
+[ bool ] $IsVerbose = $false
 
-# Check if Verbose is supplied.
-if ( $MyInvocation.BoundParameters[ "Verbose" ].IsPresent ) {
-    if ( $VerbosePreference -ne 'SilentlyContinue' ) {
-        $TmpText = $VerbosePreference
-        $IsVerbose = $true
-    }
-    else {
-        $TmpText = 'SilentlyContinue'
-        $IsVerbose = $false
-    }
+#Region : 'Check if Verbose file is set.'
+$VerboseFile = $ScriptFolder + '\' + $ScriptName + '.On'
+if ( Test-Path $VerboseFile ){
+    $CurDebug = $true
 }
-else {
-    $TmpText = 'No verbose supplied.'
-    $IsVerbose = $false
-}
-#EndRegion 'Initialize.'
+#EndRegion : 'Check if Verbose file is set.'
 
-#Region 'Function - Required.'
+#Region 'Function - Required - Get-TimeStamp.'
 if ( Get-Command Get-TimeStamp -ErrorAction SilentlyContinue ) {
-    Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Function 'Get-TimeStamp' exists."
+    if ( $CurDebug ) {
+        Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Function 'Get-TimeStamp' exists."
+    }
 } else {
-    Write-Host '...' $ScriptName "INFO Function 'Get-TimeStamp' does not exist, create a quick one."
+    if ( $CurDebug ) {
+        Write-Host '...' $ScriptName "INFO Function 'Get-TimeStamp' does not exist, create a quick one."
+    }
     function Get-TimeStamp {
+        <#
+
+        .SYNOPSIS
+        Return a time stamp to be used in e.g.: logfiles, 
+
+        .DESCRIPTION
+        Return a time stamp to be used in e.g.: logfiles, 
+
+        .EXAMPLE
+        PS> Get-TimeStamp
+        20191004-184821.729
+
+        .INPUTS
+        NA
+
+        .OUTPUTS
+        NA
+
+        .NOTES
+        Author      : Marcel Rijsbergen.
+        Copyright   : 2018-<today>, Marcel Rijsbergen.
+        History     : Can not remember. Used it already pretty quick after i created functions.
+        Ideas       :
+        - Add parameters to be able to return different output.
+        
+        #>
         Return ( Get-Date -Format "yyyyMMdd" )        
     }
 }
-#EndRegion 'Function - Required.'
+#EndRegion 'Function - Required - Get-TimeStamp.'
 
-Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Loading module."
-Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Verbose status : $( $TmpText )"
+if ( $CurDebug ) { Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Loading module." }
+#EndRegion 'Initialize.'
 
-# Test for config.
-if ( $CurConfig ) {
-    $ConfigFile = $CurConfig + 'Config-' + $ScriptName + '.psd1'
-    Write-Verbose "$( Get-TimeStamp) $ScriptName INFO Try Config file : $( $ConfigFile )"
-    if ( Test-Path $ConfigFile ) {
-        try {
-            #$Config.$BaseName = ( Import-PowerShellDataFile -Path $ConfigFile.FullName )
-            Set-Variable -Scope Global -Name "Config$( $ScriptName )" -Value ( Import-PowerShellDataFile -Path $ConfigFile ) -Description "Configuration for module $( $ScriptName )"
-            Write-Host "$( Get-TimeStamp) $ScriptName INFO Config loaded : $( $ConfigFile )" -ForegroundColor Green
+#Region 'Test for config and read it.'
+$Curdir = Get-Location
+if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Current folder : $( $curdir )" }
+$ConfigFile = $ScriptFolder + '\' + $ScriptName + '-Config.psd1'
+$ConfigName = $ScriptName -replace '[-_]',''
+if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Try Config file : $( $ConfigFile )" }
+if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Set Config variable : $( $ConfigName )" }
+if ( Test-Path $ConfigFile ) {
+    try {
+        $setvarhash = @{
+            Name = "Config.$( $ConfigName )"
+            Value = ( Import-PowerShellDataFile -Path $ConfigFile )
+            Description = "Configuration for module $( $ScriptName )"
         }
-        catch {
+        Set-Variable -Scope Global @setvarhash
+        if ( $CurDebug ) {
+            Write-Host "$( Get-TimeStamp) $ScriptName INFO Config loaded into : $( Get-Variable $ConfigFile )" -ForegroundColor Green
+        }
+    } catch {
+        if ( $CurDebug ) {
             Write-Host "$( Get-TimeStamp) $ScriptName WARNING Config load : Failed" -ForegroundColor Yellow
         }
     }
-    else {
+} else {
+    if ( $CurDebug ) {
         Write-Host "$( Get-TimeStamp) $ScriptName INFO No config file :" $ConfigFile
     }
 }
-else {
-    Write-Host "$( Get-TimeStamp) $ScriptName INFO No config folder found."
-}
-# End - Prefix to module.
+#EndRegion 'Test for config and read it.'
