@@ -1,4 +1,3 @@
-# Function Start: Convert-Bytes
 function Convert-Bytes( ) {
     <#
     .SYNOPSIS
@@ -20,6 +19,7 @@ function Convert-Bytes( ) {
     The integer given is converted to a MB, GB, TB, ... output.
 
     .NOTES
+    Author      : Marcel Rijsbergen
     History:
 
     190512 MR
@@ -140,4 +140,3 @@ function Convert-Bytes( ) {
     Return "$( $CurNum ) $( $CurText )"
 
 }
-# Function End: Convert-Bytes

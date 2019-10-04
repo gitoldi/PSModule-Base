@@ -26,7 +26,6 @@
     - 0.1.0 First release.
 
 #>
-
-Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO The 'suffix.ps1' of this module."
-
-# End - Suffix to module.
+if ( $CurDebug ) {
+    Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO The 'suffix.ps1' of this module."
+}
