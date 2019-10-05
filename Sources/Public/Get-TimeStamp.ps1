@@ -41,7 +41,7 @@ function Get-TimeStamp() {
         Write-Verbose "$FunctionName version : $ScriptVersion"
         Return $ScriptVersion
     }
-    write-verbose "Function Begin : $FunctionName"
+    #write-verbose "Function Begin : $FunctionName"
     #EndRegion 'Initialization'
 
     #Region 'Setup string.'
@@ -61,10 +61,10 @@ function Get-TimeStamp() {
     $GetCurStamp = $CurStamp + ".$( $CurMilliSec )"
 
     # Depending on debug level show info.
-    write-verbose "$FunctionName - $GetCurStamp"
+    #write-verbose "$FunctionName - $GetCurStamp"
     #EndRegion 'Setup string.'
 
     # Function is finished, return data to caller.
-    write-verbose "Function End: $FunctionName"
+    #write-verbose "Function End: $FunctionName"
     return [ string ]$GetCurStamp
 }
