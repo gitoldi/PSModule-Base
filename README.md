@@ -22,6 +22,29 @@ Thoughts:
 * [GitHub mastering markdown](https://guides.github.com/features/mastering-markdown/)
 
 <h1 id='build'>Build Module</h1>
+Requires the already loaded module *ModuleBuilder* as described and pointed to in [ PSModule-Personal ]( #top ) at the beginning. I'm not explaining the ModuleBuilder but only give a quick summary how to build the final module. People who use ModuleBuilder will know what to change. For others I'll advise to use all the defaults.
+
+After you did a
+
+    git clone https://github.com/gitoldi/PSModule-Personal.git
+
+the tree will be created under the current folder you started the command. Or you might copied and extracted the ZIP in a temporary folder. You might want to modify 'sources\build.psd1'. When running the 'Build-Module' it creates the module in one of the standard PowerShell '$env:PSModulePath' folders. If you want the module in another PowerShell (Core) personal, group or system folder you can modify the 'OutputDirectory' variable. For group or system folder make sure you have the proper (admin) rights. The default setup will create the module in the (sub)folders and files in the given top folder 'PSModule-Personal'.
+
+    PS> Build-Module <full-path-to>\PSModule-Personal\Sources\ -Prefix prefix.ps1 -Suffix suffix.ps1
+
+Now the module is created and you'll find it by default as described in the 'build.psd1'
+
+    PS> Get-ChildItem $env:USERPROFILE'\documents\windowspowershell\modules\psmodule-personal'
+
+    Directory: C:\Users\<username>\documents\windowspowershell\modules\psmodule-personal
+    
+    Mode                LastWriteTime         Length Name
+    ----                -------------         ------ ----
+    d-----        10/6/2019   5:01 PM                en-US
+    d-----        10/6/2019   5:01 PM                nl-NL
+    -a----        10/4/2019   8:27 PM           2479 PSModule-Personal-Config.psd1
+    -a----        10/6/2019   5:01 PM           2493 PSModule-Personal.psd1
+    -a----        10/6/2019   5:01 PM          16747 PSModule-Personal.psm1
 
 <h1 id='import'>Import module</h1>
 The module must be found in one of the standard module paths, see the above mentioned issue.
