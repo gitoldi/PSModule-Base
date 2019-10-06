@@ -7,14 +7,16 @@
         - https://docs.microsoft.com/en-us/powershell/dsc/configurations/configdata
         - DSC descriptions, but they mostly use different type (XML).
     Usage       :
-    PS> $xx = Import-PowerShellDataFile -Path .\Folder\Config-File.psd1
+
+    PS> $xx = Import-PowerShellDataFile -Path <full-path-to-configfile.psd1>
     PS> $xx
     Name                           Value
     ----                           -----
-    Software                       {System.Collections.Hashtable, System.Collections.Hashtable, System.Collections.Hashtable, System.Collections.Hashtable...}
+    Personal                       {System.Collections.Hashtable, System.Collections.Hashtable, System.Collections.Hashtable}
     Folders                        {Config, Logs, Html, Output...}
 
-    PS> $xx.Software.Where({ $_.function -match 'snow' })
+    PS> $xx.Personal.Where{ $_.vendor -eq 'microsoft' }.mail
+    <user>@outlook.com
 
     Created     : 191003
     History     :
@@ -23,46 +25,30 @@
     #>
 
     Folders = @(
-        # These folders will be checked for existing in $env:userprofile'\documents'.
-        'Config',   # Will contain configuration files like this '.psd1' file.
+        # In my environment i check if these folders exist in $env:userprofile'\documents'.
+        # If not they will be created.
+        'Config',   # Will contain configuration files, some of which are for PowerShell.
         'Logs',     # Will contain logfiles.
-        'Html',     # Will contain HTML files.
+        'Html',     # Will contain output HTML files. e.g. for https://github.com/azurefieldnotes/ReportHTML
         'Output',   # Will contain all sorts of output like: csv, xml, pdf
         'Temp'      # Can be used for temporary files.
     )
 
-    Software = @(
+    Personal = @(
         @{
-            Function = '*'
-            Registry = ''
-            Keys = 'CurrentVersion', 'Install Directory'
+            Vendor = 'GitHub'
+            Username = '<username>'
+            Mail = '<user>@<maildomain>'
         },
         @{
-            Function = 'Snow Inventory - SI'
-            Registry = 'HKEY_LOCAL_MACHINE\SOFTWARE\mozilla.org\Mozilla'
-            Keys = 'CurrentVersion'
+            Vendor = 'Google'
+            Username = '<username>'
+            Mail = '<user>@gmail.com'
         },
         @{
-            Function = 'Snow Inventory Service Gateway - SI-SG'
-            Registry = 'HKEY_LOCAL_MACHINE\SOFTWARE\Mozilla\Mozilla Firefox\69.0.2 (x64 nl)\Main'
-            Keys = 'Install Directory', 'PathToExe'
-        },
-        @{
-            Function = 'Snow License Manager - SLM'
-            Registry = 'HKEY_LOCAL_MACHINE\SOFTWARE\VideoLAN\VLC'
-            Keys = 'InstallDir', 'Version'
-        },
-        @{
-            Function = 'Product 1 - P1'
-            Registry = 'HKEY_LOCAL_MACHINE\SOFTWARE\VideoLAN\VLC'
-        },
-        @{
-            Function = 'Product 2 - P2'
-            Registry = 'HKEY_LOCAL_MACHINE\SOFTWARE\Product'
-            Keys = 'K1', 'K2'
-        },
-        @{
-            Function = 'Snow Integration Manager - SIM'
+            Vendor = 'Microsoft'
+            Username = '<username>'
+            Mail = '<user>@outlook.com'
         }
     )
 }
