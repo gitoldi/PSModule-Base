@@ -22,6 +22,7 @@ Links used as reference:
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
 <h2>0.2.1<h2>
+
 * *Added*
     * Get-CommandVersion.ps1
         * The 'Get-Command' showd the version of the module itself. Not of the functions/commands in the module.
