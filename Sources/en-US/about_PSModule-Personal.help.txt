@@ -5,22 +5,14 @@ SHORT DESCRIPTION
     A personal module.
 
 LONG DESCRIPTION
-    This project is to build a personal module using GitHub (https://github.com/) and use the suggested ModuleBuilder (https://github.com/PoshCode/ModuleBuilder) way of working.
+    This project is to build a personal module using GitHub (https://github.com/) 
+    and use the suggested ModuleBuilder (https://github.com/PoshCode/ModuleBuilder) way of working.
 
-    - Build a simple set of handy personal tools.
-    - ...
-
-EXAMPLES
-    Some text.
-
-NOTE:
-    Some text.
-
-TROUBLESHOOTING NOTE:
-    Some text.
-
-SEE ALSO
-    Some text.
+    - Build a simple set of handy tools.
+    - Some scripts are based on tips & trick by other scripters that will be mentioned in the script.
+    - For more details see:
+        - https://github.com/gitoldi/PSModule-Personal
+        - And use 'Get-Help <command>' for individual scripts.
 
 KEYWORDS
       PowerShell, Module, Tools, personal
