@@ -70,11 +70,13 @@ function Get-CommandVersion {
 
     param (
         [ Parameter( )]
-        [ Switch ] $Version,
-
+        [ Switch ] $Version
+        ,
         [ Parameter( )]
         [ array ] $Modules
+
     )
+    #EndRegion 'Initialize.'
 
     # First get name and return version if requested.
     $ScriptName = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
@@ -83,7 +85,6 @@ function Get-CommandVersion {
         Write-Verbose "$ScriptName version : $ScriptVersion"
         Return $ScriptVersion
     }
-    #EndRegion 'Initialize.'
 
     #Region 'Loop through modules.'
     Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Modules to test # $( $Modules.Count )"
@@ -101,14 +102,14 @@ function Get-CommandVersion {
             }
             catch {
                 $TpmErr = $_
-                $TpmError = 'Has no (proper) parameter "Version.'
+                $TpmError = 'Has no (proper) parameter "Version".'
                 #Write-Host ( Get-TimeStamp ) $ScriptName 'ERROR Command' $TmpCmd.Name ''
                 #write-host "`t" $TmpCmd.Name.PadLeft( 25 ) '-' ( $TmpVersion ) '-' $TpmError
             }
             Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) ......$( $TmpVersion ) - $( $TmpError )"
             [ PSCustomObject ] @{
-                Module = "$TmpModule ($($ModVersion ))"
-                Command = $TmpCmd
+                "Source (version)" = "$TmpModule ($($ModVersion ))"
+                Name = $TmpCmd
                 Version = $TmpVersion
                 Error = $TpmError
             }
