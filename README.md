@@ -12,8 +12,8 @@ To see a list of changes in this version, refer to the [Changelog](CHANGELOG.md)
 * So this repo only contains the files to *build* the module.
 
 Thoughts:
-* Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath issues. See the PowerShell GitHub.
-* Usage should be possible in both *PowerShell* and *PoerShell Core*.
+* Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath things to consider. See the PowerShell GitHub.
+* Usage should be possible in both *PowerShell* and *PowerShell Core*.
 
 <h2>Some Markdown guides</h2>
 
@@ -23,14 +23,18 @@ Thoughts:
 
 <h1 id='build'>Build Module</h1>
 
-Requires the already loaded module *ModuleBuilder* as described and pointed to in [ PSModule-Personal ]( #top ) at the beginning. I'm not explaining the ModuleBuilder but only give a quick summary how to build the final module. People who use ModuleBuilder will know what to change. For others I'll advise to use all the defaults.
+Requires the already loaded module *ModuleBuilder* as described at the beginning. I'm not explaining the ModuleBuilder but only give a quick summary how to build the final module. People who use ModuleBuilder will know what to change. For others I'll advise to use all the defaults.
 
 After you did a
 
     git clone https://github.com/gitoldi/PSModule-Personal.git
     set-location PSModule-Personal
 
-the tree will be created under the current folder you started the command. You might want to modify 'sources\build.psd1'. When running the 'Build-Module' it creates the module in one of the standard PowerShell [ $env:PSModulePath ]( https://docs.microsoft.com/en-us/powershell/developer/module/modifying-the-psmodulepath-installation-path ) folders. If you want the module in another PowerShell (Core) personal, group or system folder you can modify the 'OutputDirectory' variable. For group or system folder make sure you have the proper (admin) rights. The default setup will create the module in the (sub)folders and files in the given top folder 'PSModule-Personal'.
+the tree will be created under the current folder you started the command. You might want to modify 'sources\build.psd1'. When running the 'Build-Module' it creates the module in one of the standard PowerShell [ $env:PSModulePath ]( https://docs.microsoft.com/en-us/powershell/developer/module/modifying-the-psmodulepath-installation-path ) folders. 
+
+The default place will be: $( $env:USERPROFILE )\Documents\WindowsPowerShell\Modules\PSModule-Personal
+
+If you want the module in another PowerShell (Core) personal, group or system folder you can modify the 'OutputDirectory' variable. For group or system folder make sure you have the proper (admin) rights. The default setup will create the module in the (sub)folders and files in the given top folder 'PSModule-Personal'.
 
     PS> Build-Module <full-path-to>\PSModule-Personal\Sources\ -Prefix prefix.ps1 -Suffix suffix.ps1
 
@@ -44,20 +48,24 @@ Now the module is created and you'll find it in the folder as described in the '
     ----                -------------         ------ ----
     d-----        10/6/2019   5:01 PM                en-US
     d-----        10/6/2019   5:01 PM                nl-NL
-    -a----        10/4/2019   8:27 PM           2479 PSModule-Personal-Config.psd1
+    -a----        10/4/2019   8:27 PM           2479 PSModule-Personal-Config-Template.psd1
     -a----        10/6/2019   5:01 PM           2493 PSModule-Personal.psd1
     -a----        10/6/2019   5:01 PM          16747 PSModule-Personal.psm1
 
+* File : PSModule-Personal.psd1
+    * The module manifest file.
 * File : PSModule-Personal.psm1
     * The module file is created by the *Build-Module* and is the concatenation of:
     * Prefix.ps1
-        * If supplied in the *Build-Module* command.
+        * As supplied in the *Build-Module* command '-prefix prefix.ps1'.
         * e.g. This locates and reads the config file.
     * All functions
         * All functions defined in the *private* and *public* folders.
     * Suffix.ps1
-        * If supplied in the *Build-Module* command.
+        * As supplied in the *Build-Module* command '-suffix suffix.ps1'.
         * e.g. Anything you want to do at the end of importing the module.
+* File : PSModule-Personal-Config-Template.psm1
+    * x
 
 <h1 id='import'>Import module</h1>
 
@@ -89,7 +97,7 @@ In the root of the repo:
 
 <h2 id="suffix">PSModule-Personal.psd1</h2>
 
-<h2 id="suffix">PSModule-Personal-Config.psd1</h2>
+<h2 id="suffix">PSModule-Personal-Config-Template.psd1</h2>
 
 <h2 id="suffix">PSModule-Personal.[On, Off]</h2>
 
@@ -98,12 +106,16 @@ In the root of the repo:
 <h2>Subfolder - en-US</h2>
 
 A small English about.
+Here some more work is required, maybe explain the way to work with multiple languages.
 
 <h2>Subfolder - nl-NL</h2>
 
-A small Dutch about.
+Een kleine Nederlandse uitleg.
+Hier is meer werk noodzakelijk, misschien uitleggen hoe te werken met meerdere talen.
 
 <h2>Folder - Sources</h2>
+
+This folder contains the main files to create the final module.
 
 * File - [Build.psd1](#build)
     * Configuration file for [ 'ModuleBuilder' ]( https://github.com/PoshCode/ModuleBuilder )
@@ -111,9 +123,11 @@ A small Dutch about.
 * File - [Prefix.ps1](#prefix)
     * Used by ModuleBuilder.
     * The contents of this file will be put at the beginning of the created <module>.psm1 file containing all functions.
+    * Here you can do some pre-requisite actions for your module. e.g.: Read a configuration file.
 * File - [Suffix.ps1](#suffix)
     * Used by ModuleBuilder.
     * The contents of this file will be put at the end of the created <module>.psm1 file containing all functions.
+    * Here you can do some cleanup or start something after the main part of your module is loaded.
 * File - PSModule-Personal.psd1
     * The manifest file for the module.
 * File - PSModule-Personal-Config.psd1
