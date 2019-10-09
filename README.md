@@ -4,7 +4,7 @@ PowerShell - A personal module. Using an already existing one to (partly) migrat
 
 To see a list of changes in this version, refer to the [Changelog](CHANGELOG.md).
 
-<h2>My first attempt to:</h2>
+<h2>My first (real) attempt to:</h2>
 
 * Setup and use GitHub.
 * Get familiar with and use [ModuleBuilder](https://github.com/PoshCode/ModuleBuilder) to prepare to create a module.
