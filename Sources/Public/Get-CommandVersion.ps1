@@ -79,7 +79,7 @@ function Get-CommandVersion {
     #EndRegion 'Initialize.'
 
     # First get name and return version if requested.
-    $ScriptName = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
+    $ScriptName = '(F)' + [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
     [ version ] $ScriptVersion = '1.2.1'
     if ( $Version ) {
         Write-Verbose "$ScriptName version : $ScriptVersion"

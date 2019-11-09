@@ -34,7 +34,7 @@ Function Get-Uptime {
     )
 
     # First get name and return version if requested.
-    $ScriptName = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
+    $ScriptName = '(F)' + [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
     [ version ] $ScriptVersion = '1.0.2'
     if ( $Version ) {
         Write-Verbose "$ScriptName version : $ScriptVersion"

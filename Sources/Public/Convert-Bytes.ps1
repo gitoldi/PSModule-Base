@@ -50,8 +50,8 @@ function Convert-Bytes( ) {
 
     param (
         [ Parameter( )] # Mandatory=$true
-        [ Long ] $CurBytes,
-
+        [ Long ] $CurBytes
+        ,
         [ Switch ] $Version
     )
 
@@ -95,42 +95,38 @@ function Convert-Bytes( ) {
 
     #Write-Host $CurFunc '-' $CurBytes
     Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Calculate value to readable text for output."
-    if (( $CurBytes -lt 1 ) -or ( $CurBytes -gt $Int64Max ))
-    {
+    if (( $CurBytes -lt 1 ) -or ( $CurBytes -gt $Int64Max )) {
         Write-Warning "$( $CurFunc ) Value is outside the range for PowerShell type 'Long'."
     }
-    elseif ( $CurBytes -ge $CurZB )
-    {
+    elseif ( $CurBytes -ge $CurZB ) {
         $CurText = "ZB"
         $CurNum = $CurBytes / $CurZB
     }
-    elseif ( $CurBytes -ge $CurEB )
-    {
+    elseif ( $CurBytes -ge $CurEB ) {
         $CurText = "EB"
         $CurNum = $CurBytes / $CurEB
     }
-    elseif ( $CurBytes -ge $CurPB )
-    {
+    elseif ( $CurBytes -ge $CurPB ) {
         $CurText = "PB"
         $CurNum = $CurBytes / $CurPB
     }
-    elseif ( $CurBytes -ge $CurTB )
-    {
+    elseif ( $CurBytes -ge $CurTB ) {
         $CurText = "TB"
         $CurNum = $CurBytes / $CurTB
     }
-    elseif ( $CurBytes -ge $CurGB )
-    {
+    elseif ( $CurBytes -ge $CurGB ) {
         $CurText = "GB"
         $CurNum = $CurBytes / $CurGB
     }
-    elseif ( $CurBytes -ge $CurMB )
-    {
+    elseif ( $CurBytes -ge $CurMB ) {
         $CurText = "MB"
         $CurNum = $CurBytes / $CurMB
     }
-    else
-    {
+    elseif ( $CurBytes -ge $CurKB ) {
+        $CurText = "KB"
+        $CurNum = $CurBytes / $CurKB
+    }
+    else {
         $CurText = "Bytes"
         $CurNum = $CurBytes
     }
@@ -138,5 +134,4 @@ function Convert-Bytes( ) {
     Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Setup final number text and return the info."
     $CurNum = "{0:N2}" -f $CurNum
     Return "$( $CurNum ) $( $CurText )"
-
 }

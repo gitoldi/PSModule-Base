@@ -21,6 +21,14 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.2</h2>
+
+* *Added*
+    * Show-Popup.ps1
+        * A(nother) wrapper around a Windows popup.
+        * This will show a Windows popup with (a) button(s).
+        * But in addition it will return a custom object so you can use the return to continue your flow.
+
 <h2>0.2.1</h2>
 
 * *Added*
