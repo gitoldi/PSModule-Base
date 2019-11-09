@@ -68,6 +68,6 @@ Function Get-Uptime {
     else {
         $TmpTxt = $TmpTxt + $CurMinutes + ' minutes'
     }
-    Write-Verbose 'System uptime since:' ( get-date $LastBoot ).DateTime '-' $TmpTxt
+    Write-Verbose "System uptime since: $(( get-date $LastBoot ).DateTime ) - $( $TmpTxt )"
     Return $GetUptime
 }
