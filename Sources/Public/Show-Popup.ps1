@@ -106,6 +106,7 @@ function Show-Popup {
     #>
 
     #Requires -Version 5.1
+    #Requires -PSEdition Core, Desktop
 
     #Region 'Initialize.'
     [ CmdletBinding( )]
@@ -138,13 +139,13 @@ function Show-Popup {
         )]
         [ ValidateNotNullorEmpty()]
         [ ValidateSet(
+            "AbortRetryIgnore",
+            "CancelTryAgainContinue",
             "OK",
             "OKCancel",
-            "AbortRetryIgnore",
-            "YesNoCancel",
-            "YesNo",
             "RetryCancel",
-            "CancelTryAgainContinue"
+            "YesNoCancel",
+            "YesNo"
         )]
         [ string ] $PopupButton = "OK"
         ,
@@ -152,7 +153,7 @@ function Show-Popup {
             HelpMessage = "Enter an icon. Default: Information."
         )]
         [ ValidateNotNullorEmpty( )]
-        [ ValidateSet( "Error", "Question", "Warning", "Information" )]
+        [ ValidateSet( "Error", "Information", "Question", "Warning" )]
         [ string ] $PopupIcon = "Information"
     )
     #EndRegion 'Initialize.'

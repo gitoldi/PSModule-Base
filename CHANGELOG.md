@@ -21,6 +21,13 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.3</h2>
+
+* *Added*
+    * Convert-Bytes : Moved from my previous personal named module.
+* *Modified*
+    * Changed version in 'PSModule-Personal.psd1'.
+
 <h2>0.2.2</h2>
 
 * *Added*
