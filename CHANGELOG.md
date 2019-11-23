@@ -21,7 +21,17 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
-<h2>0.2.3</h2>
+<h2>0.2.4 - 191123</h2>
+
+* *Added*
+    * Prompt.ps1
+        * Copied from my previous personal named module.
+        * Changes the prompt. e.g. a red '[Admin]' when the prompt is run as administrator.
+    * Test-WriteProgress
+        * Copied from my previous personal named module.
+        * Multi level demo of progress bars.
+
+<h2>0.2.3 - 191123</h2>
 
 * *Added*
     * Convert-Bytes : Moved from my previous personal named module.
