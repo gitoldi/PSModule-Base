@@ -21,6 +21,13 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.5 - 191124</h2>
+
+* *Added*
+    * Get-Calendar.ps1
+        * Something from the internet.
+        * A PowerShell way for the *ix 'cal' command.
+
 <h2>0.2.4 - 191123</h2>
 
 * *Added*
