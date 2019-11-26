@@ -21,6 +21,16 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.6 - 191126</h2>
+
+* *Added*
+    * Show-Characterline.ps1
+        * Display a line with numbers to show in a terminal as indicator for the width.
+        * Default is 80 characters, but use parameter 'MaxLoop' for other numbers.
+        * Show-Characterline -MaxLoop 32
+        012345678901234567890123456789012
+        * Returns this string too so if required the total string can be used elsewere.
+
 <h2>0.2.5 - 191124</h2>
 
 * *Added*
