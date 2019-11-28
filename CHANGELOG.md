@@ -21,6 +21,13 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.7 - 191128</h2>
+
+* *Added*
+    * Get-Software.ps1
+        * Used source: [Gathering Installed Software Using PowerShell] (https://mcpmag.com/articles/2017/07/27/gathering-installed-software-using-powershell.aspx) on MCPMAG.
+        * Some tweaking to conform to my personal setup.
+
 <h2>0.2.6 - 191126</h2>
 
 * *Added*
