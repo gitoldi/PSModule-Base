@@ -22,10 +22,13 @@ function Get-Software {
     - https://mcpmag.com/articles/2017/07/27/gathering-installed-software-using-powershell.aspx
 
     History:
+    - 191129 MR
+        - 1.1.4 Added an object per path that contains all empty/unknown key's.
+            Gave them the Displayname 'Unknown'. And the key is ALL the empty/unknown ones.
+    
     - 191128 MR
         - 1.0.1 Created this version based on above source.
             Modified parts to comply to my setup.
-            Added PSCustomObject.
 
     #>
 
@@ -45,9 +48,6 @@ function Get-Software {
             ValueFromPipelineByPropertyName = $True
         )]
         [ String[ ]] $Computername = $env:COMPUTERNAME
-        ,
-        [Parameter( )]
-        [ string ] $DebugSW = 'xyz123'
     )
     #EndRegion 'Initialize.'
 
@@ -56,7 +56,7 @@ function Get-Software {
         # Get name and return version if requested.
         $ScriptName = '(F)' + [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Part: Begin."
-        [ version ] $ScriptVersion = '1.0.1'
+        [ version ] $ScriptVersion = '1.1.4'
         if ( $Version ) {
             Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Test if Version was requested: $( $ScriptVersion )"
             Break
@@ -67,6 +67,9 @@ function Get-Software {
     #Region 'Block Process.'
     Process {
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Part: Process."
+        [ array ] $NoSoftware = @()
+
+        #Region 'Loop through all computers.'
         ForEach  ( $Computer in  $Computername ) {
             Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Check host: $( $Computer )"
             If ( Test-Connection -ComputerName  $Computer -Count  1 -Quiet ) {
@@ -75,6 +78,8 @@ function Get-Software {
                     "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
                     "SOFTWARE\\Wow6432node\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
                 )
+
+                #Region 'Loop through each path.'
                 ForEach ( $Path in $Paths ) {
                     Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Checking Path: $Path"
 
@@ -91,37 +96,33 @@ function Get-Software {
                         Continue
                     }
 
-                    # Drill down into the Uninstall key using the OpenSubKey Method.
+                    #Region 'Drill down into the Uninstall key using the OpenSubKey Method.'
                     Try {
                         $regkey = $reg.OpenSubKey( $Path )
-                        Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Drilldown into 'Uninstall' key for: $( $regkey )"
+                        Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Drilldown into 'Uninstall' key for: $( $regkey )"
 
                         # Retrieve an array of string that contain all the subkey names.
                         $subkeys = $regkey.GetSubKeyNames()
                         $subkeysCount = $subkeys.count
-                        Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Subkeys found # $( $subkeysCount )"
+                        Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Subkeys found # $( $subkeysCount )"
 
-                        # Open each Subkey and use GetValue Method to return the required values for each.
+                        #Region 'Open each Subkey and use GetValue Method to return the required values for each.'
                         $TempCounter = 1
                         ForEach ( $key in $subkeys ) {
                             $TmpDbg = $DebugSW
                             Write-Verbose "`t...Testing Key $( $TempCounter.ToString().PadLeft( 3 )) : $Key"
                             $thisKey = $Path + "\\" + $key
+
+                            #Region 'Try to get subkey information.'
                             Try {
                                 $thisSubKey = $reg.OpenSubKey( $thisKey )
-                                if ( $key -eq $TmpDbg ) {
-                                    Write-Host ( '-' * 80 )
-                                    Write-Host '......subkey'
-                                    $thisSubKey | Format-List *
-                                    Write-Host '......Getvalues:'
-                                }
                                 
                                 # Prevent Objects with empty DisplayName
-                                Write-Verbose "`t......DisplayName"
+                                $Tmpvalues = "`t......DisplayName"
                                 $DisplayName = $thisSubKey.getValue( "DisplayName" )
                                 #If ( $DisplayName -AND $DisplayName -notmatch '^Update  for|rollup|^Security Update|^Service Pack|^HotFix' ) {
                                 If ( $DisplayName ) {
-                                    Write-Verbose "`t......Date"
+                                    $Tmpvalues = $Tmpvalues + ', Date'
                                     $Date = $thisSubKey.GetValue( 'InstallDate' )
                                     If ( $Date ) {
                                         Try {
@@ -134,7 +135,7 @@ function Get-Software {
                                     }
 
                                     # Create New Object with empty Properties.
-                                    Write-Verbose "`t......Publisher"
+                                    $Tmpvalues = $Tmpvalues + ', Publisher'
                                     $Publisher = Try {
                                         $thisSubKey.GetValue( 'Publisher' ).Trim()
                                     }
@@ -142,7 +143,7 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'Publisher' )
                                     }
 
-                                    Write-Verbose "`t......Displayversion"
+                                    $Tmpvalues = $Tmpvalues + ', Displayversion'
                                     $KeyVersion = Try {
                                         # Some weirdness with trailing [char]0 on some strings.
                                         $thisSubKey.GetValue( 'DisplayVersion' ).TrimEnd(([ char[ ]]( 32, 0 )))
@@ -151,7 +152,7 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'DisplayVersion' )
                                     }
 
-                                    Write-Verbose "`t......Uninstallstring"
+                                    $Tmpvalues = $Tmpvalues + ', Uninstallstring'
                                     $UninstallString = Try {
                                         $thisSubKey.GetValue( 'UninstallString' ).Trim()
                                     }
@@ -159,7 +160,7 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'UninstallString' )
                                     }
 
-                                    Write-Verbose "`t......Installlocation"
+                                    $Tmpvalues = $Tmpvalues + ', Installlocation'
                                     $InstallLocation = Try {
                                         $thisSubKey.GetValue( 'InstallLocation' ).Trim()
                                     }
@@ -167,7 +168,7 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'InstallLocation' )
                                     }
 
-                                    Write-Verbose "`t......InstallSource"
+                                    $Tmpvalues = $Tmpvalues + ', InstallSource'
                                     $InstallSource = Try {
                                         $thisSubKey.GetValue( 'InstallSource' ).Trim()
                                     }
@@ -175,7 +176,7 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'InstallSource' )
                                     }
 
-                                    Write-Verbose "`t......HelpLink"
+                                    $Tmpvalues = $Tmpvalues + ', HelpLink'
                                     $HelpLink = Try {
                                         $thisSubKey.GetValue( 'HelpLink' ).Trim()
                                     }
@@ -183,7 +184,8 @@ function Get-Software {
                                         $thisSubKey.GetValue( 'HelpLink' )
                                     }
 
-                                    Write-Verbose "`t......PSCustomObject"
+                                    $Tmpvalues = $Tmpvalues + ', PSCustomObject'
+                                    Write-Verbose $Tmpvalues
                                     $Object = [ pscustomobject ] @{
                                         Computername = $Computer
                                         Key = $key
@@ -194,7 +196,7 @@ function Get-Software {
                                         UninstallString = $UninstallString
                                         InstallLocation = $InstallLocation
                                         InstallSource  = $InstallSource
-                                        HelpLink = $thisSubKey.GetValue( 'HelpLink' )
+                                        HelpLink = $HelpLink
                                         EstimatedSizeMB = [ decimal ]([ math ]::Round((
                                                 $thisSubKey.GetValue( 'EstimatedSize' ) * 1024 ) / 1MB,
                                                 2
@@ -203,27 +205,61 @@ function Get-Software {
                                     $Object.pstypenames.insert( 0, 'System.Software.Inventory' )
                                     Write-Output $Object
                                 }
+                                else {
+                                    $NoSoftware += $key
+                                }
                             }
                             Catch {
                                 Write-Warning "$Key : $_"
                             }
-                            if ( $key -eq $TmpDbg ) {
-                                Read-Host -Prompt 'Hit [Enter] to continue.'
-                                Write-Host ( '-' * 80 )
-                            }
+                            #EndRegion 'Try to get subkey information.'
                             $TempCounter++
                         }
+                        #EndRegion 'Open each Subkey and use GetValue Method to return the required values for each.'
+
                     }
                     Catch {
-                        #   
+                        Write-Warning "$( Get-TimeStamp ) $( $ScriptName ) WARNING Should not come here."
                     }
+                    #EndRegion 'Drill down into the Uninstall key using the OpenSubKey Method.'
+
+                    #Region 'Finished all paths, finish.'
                     $reg.Close()
+                    $TmpText = "$( Get-TimeStamp ) $( $ScriptName ) INFO No information for the following ( $( $NoSoftware.Count )) keys"
+                    foreach ( $NoSW in $NoSoftware ) {
+                        $TmpText = $TmpText + ", $( $NoSW )"
+                    }
+                    Write-Verbose "$( $TmpText )."
+                    try {
+                        $Object = [ pscustomobject ] @{
+                            Computername = $Computer
+                            Key = "$( $TmpText )"
+                            DisplayName = 'Unknown'
+                            Version = ''
+                            InstallDate = Get-Date
+                            Publisher = ''
+                            UninstallString = ''
+                            InstallLocation = ''
+                            InstallSource  = ''
+                            HelpLink = ''
+                            EstimatedSizeMB = 0
+                        }
+                        $Object.pstypenames.insert( 0, 'System.Software.Inventory' )
+                        Write-Output $Object                    
+                    }
+                    catch {
+                        Write-Host "$( Get-TimeStamp ) $( $ScriptName ) WARNING Error creating object with empty/unknown key's."
+                    }
+                    #EndRegion 'Finished all paths, finish.'
                 }
+                #EndRegion 'Loop through each path.'
+
             }
             Else {
-                Write-Error "$($Computer): unable to reach remote system!"
+                Write-Error "$( Get-TimeStamp ) $( $ScriptName ) INFO $($Computer): unable to reach remote system!"
             }
         } 
+        #EndRegion 'Loop through all computers.'
     }
     #EndRegion 'Block Process.'
 

@@ -21,6 +21,12 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.8 - 191129</h2>
+
+* *Modified*
+    * Get-Software.ps1
+        * Added an object per path for unknown/empty key's.
+
 <h2>0.2.7 - 191128</h2>
 
 * *Added*
