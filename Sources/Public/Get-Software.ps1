@@ -6,7 +6,81 @@ function Get-Software {
     .DESCRIPTION
     Get installed software based on the 'uninstall' registry key.
 
+    Sources:
+    - https://mcpmag.com/articles/2017/07/27/gathering-installed-software-using-powershell.aspx
+
+    Modified the script a bit to comply to the setup for this module.
+    Added 'Write-Verbose' since the script didn't run at first. Left it in.
+    Added an extra object per path that contains all the empty/unknown key's.
+
     .EXAMPLE
+    PS [Normal] > get-software
+
+    Computername    : <computername>
+    Key             : 7-Zip
+    DisplayName     : 7-Zip 18.05 (x64)
+    Version         : 18.05
+    InstallDate     :
+    Publisher       : Igor Pavlov
+    UninstallString : D:\Software\7-Zip\Uninstall.exe
+    InstallLocation : D:\Software\7-Zip\
+    InstallSource   :
+    HelpLink        :
+    EstimatedSizeMB : 4,93
+
+    .EXAMPLE
+    PS [Normal] > get-software -Verbose
+    VERBOSE: 20191129-145725.792 (F)Get-Software INFO Part: Begin.
+    VERBOSE: 20191129-145725.792 (F)Get-Software INFO Part: Process.
+    VERBOSE: 20191129-145725.792 (F)Get-Software INFO Check host: MEKD-PC-01
+    VERBOSE: 20191129-145725.811 (F)Get-Software INFO Check registry keys.
+    VERBOSE: 20191129-145725.820 (F)Get-Software INFO Checking Path: SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall
+    VERBOSE: 20191129-145725.831 (F)Get-Software INFO Drilldown into 'Uninstall' key for: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+    VERBOSE: 20191129-145725.836 (F)Get-Software INFO Subkeys found # 50
+    VERBOSE:  ...Testing Key   1 : 7-Zip
+    VERBOSE:  ......DisplayName, Date, Publisher, Displayversion, Uninstallstring, Installlocation, InstallSource, HelpLink, PSCustomObject
+
+    Computername    : <computername>
+    Key             : 7-Zip
+    DisplayName     : 7-Zip 18.05 (x64)
+    Version         : 18.05
+    InstallDate     :
+    Publisher       : Igor Pavlov
+    UninstallString : D:\Software\7-Zip\Uninstall.exe
+    InstallLocation : D:\Software\7-Zip\
+    InstallSource   :
+    HelpLink        :
+    EstimatedSizeMB : 4,93
+
+    .EXAMPLE
+    PS [Normal] > $AllSw = get-software -Verbose
+    VERBOSE: 20191129-145919.810 (F)Get-Software INFO Part: Begin.
+    VERBOSE: 20191129-145919.820 (F)Get-Software INFO Part: Process.
+    VERBOSE: 20191129-145919.820 (F)Get-Software INFO Check host: <computername>
+    VERBOSE: 20191129-145919.880 (F)Get-Software INFO Check registry keys.
+    VERBOSE: 20191129-145919.880 (F)Get-Software INFO Checking Path: SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall
+    VERBOSE: 20191129-145919.880 (F)Get-Software INFO Drilldown into 'Uninstall' key for: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall
+    VERBOSE: 20191129-145919.880 (F)Get-Software INFO Subkeys found # 50
+    VERBOSE:  ...Testing Key   1 : 7-Zip
+    VERBOSE:  ......DisplayName, Date, Publisher, Displayversion, Uninstallstring, Installlocation, InstallSource, HelpLink, PSCustomObject    
+    ...
+
+    .EXAMPLE
+    PS [Normal] > $AllSw = get-software
+    PS [Normal] > $AllSw | Where-Object { $_.displayname -eq 'unknown' }
+
+    Computername    : <computername>
+    Key             : 20191129-150020.100 (F)Get-Software INFO No information for the following ( 7 ) keys, AddressBook, Connection Manager, 
+                        DirectDrawEx, IE40, IE4Data, IE5BAKEX, IEData
+    DisplayName     : Unknown
+    Version         :
+    InstallDate     : 29-11-2019 15:00:20
+    Publisher       :
+    UninstallString :
+    InstallLocation :
+    InstallSource   :
+    HelpLink        :
+    EstimatedSizeMB : 0
 
     .PARAMETER Version [<SwitchParameter>]
     Will show the version of the script and exit.
@@ -18,9 +92,6 @@ function Get-Software {
     The PSCustomObject will be shown in the default table format.
 
     .NOTES
-    Sources:
-    - https://mcpmag.com/articles/2017/07/27/gathering-installed-software-using-powershell.aspx
-
     History:
     - 191129 MR
         - 1.1.4 Added an object per path that contains all empty/unknown key's.
