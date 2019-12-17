@@ -5,11 +5,11 @@ function Convert-Bytes( ) {
 
     .DESCRIPTION
     Convert bytes to KB, MB, GB, etc.
-    Use 1000 for calculations, NOT 1024.
+    Use 1000 (megabyte) for calculations, NOT 1024 (mebibyte).
     See : https://nl.wikipedia.org/wiki/Megabyte
 
     .EXAMPLE
-    PS C:\> Convert-Bytes -CurBytes 10000
+    PS C:\> Convert-Bytes -NumberOfBytes 10000
     10,00 MB
 
     .INPUTS
@@ -21,6 +21,9 @@ function Convert-Bytes( ) {
     .NOTES
     Author      : Marcel Rijsbergen
     History:
+
+    191213 MR
+    - 1.0.6 Added explanation megabyte versus mebibyte.
 
     190512 MR
     - 1.0.5 Changed version to 3 deep.
@@ -50,9 +53,11 @@ function Convert-Bytes( ) {
 
     param (
         [ Parameter( )] # Mandatory=$true
-        [ Long ] $CurBytes
+        [ Long ] $NumberOfBytes
         ,
         [ Switch ] $Version
+        ,
+        [ Switch ] $MebiBytes
     )
 
     #
@@ -61,77 +66,124 @@ function Convert-Bytes( ) {
     # Set current (sub)routine name.
     #
     $CurFunc = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
-    [ version ] $ScriptVersion = '1.0.5'
+    [ version ] $ScriptVersion = '1.1.4'
     if ( $Version ) {
         Write-Verbose "$CurFunc version : $ScriptVersion"
         Return $ScriptVersion
     }
 
-    # Define some variables to use in calculation.
-    # Disk manufacturers use 1000. MB = 1000
-    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Set variables (based on 1000)."
-    $CurKB = 1000           # Kilobyte
-    $CurMB = $CurKB * 1000  # Megabyte
-    $CurGB = $CurMB * 1000  # Gigabyte
-    $CurTB = $CurGB * 1000  # Terabyte
-    $CurPB = $CurTB * 1000  # Petabyte
-    $CurEB = $CurPB * 1000  # Exabyte
-    $CurZB = $CurEB * 1000  # Zettabyte
-    # Yottabyte
-    # Brontobyte
-    # Geopbyte
-    # Saganbyte
-    # Pijabyte
-
-    # IEC use 1024. MiB = 1024
-    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Set variables (based on 1024)."
-    $CurKiB = 1024          # KibiByte
-    # MebiMyte 
-
     # Max values.
     Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Set some maximum levels."
-    $Int32Max =  4294967295
-    $Int64Max =  18446744073709551615
+    $Int32Max = [ uint32 ]::MaxValue # 4294967295
+    $Int64Max = [ uint64 ]::MaxValue # 18446744073709551615
+    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) unsigned 32-bit: $( $Int32Max ) - $( ""{0:N0}"" -f $( $Int32Max ))"
+    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) unsigned 64-bit: $( $Int64Max ) - $( ""{0:N0}"" -f $( $Int64Max ))"
 
-    #Write-Host $CurFunc '-' $CurBytes
-    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Calculate value to readable text for output."
-    if (( $CurBytes -lt 1 ) -or ( $CurBytes -gt $Int64Max )) {
-        Write-Warning "$( $CurFunc ) Value is outside the range for PowerShell type 'Long'."
-    }
-    elseif ( $CurBytes -ge $CurZB ) {
-        $CurText = "ZB"
-        $CurNum = $CurBytes / $CurZB
-    }
-    elseif ( $CurBytes -ge $CurEB ) {
-        $CurText = "EB"
-        $CurNum = $CurBytes / $CurEB
-    }
-    elseif ( $CurBytes -ge $CurPB ) {
-        $CurText = "PB"
-        $CurNum = $CurBytes / $CurPB
-    }
-    elseif ( $CurBytes -ge $CurTB ) {
-        $CurText = "TB"
-        $CurNum = $CurBytes / $CurTB
-    }
-    elseif ( $CurBytes -ge $CurGB ) {
-        $CurText = "GB"
-        $CurNum = $CurBytes / $CurGB
-    }
-    elseif ( $CurBytes -ge $CurMB ) {
-        $CurText = "MB"
-        $CurNum = $CurBytes / $CurMB
-    }
-    elseif ( $CurBytes -ge $CurKB ) {
-        $CurText = "KB"
-        $CurNum = $CurBytes / $CurKB
+    # Define some variables to use in calculation.
+    $TextStrings = @()
+    if ( $MebiBytes ) {
+        # Memory is calculated using 1024. MiB = Mebibyte.
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Set variables (based on 1024)."
+        $TextStrings = (
+            'B = Byte',
+            'KiB = KibiByte',
+            'MiB = MebiByte',
+            'GiB = GibiByte',
+            'TiB = TebiByte',
+            'PiB = PebiByte',
+            'EiB = ExbiByte',
+            'Zib = ZebiByte',
+            'YiB = YobiByte'
+        )
+        $Multiplier = 1024
+        $CurKB = 1024                   # Kibibyte
+        $CurMB = $CurKB * $Multiplier   # Mebibyte
+        $CurGB = $CurMB * $Multiplier   # Gibibyte
+        $CurTB = $CurGB * $Multiplier   # Tebibyte
+        $CurPB = $CurTB * $Multiplier   # Pebibyte
+        $CurEB = $CurPB * $Multiplier   # Exbibyte
+        $CurZB = $CurEB * $Multiplier   # Zebibyte
+        $CurYB = $CurZB * $Multiplier   # Yobibyte
+        # Brontobyte
+        # Geopbyte
+        # Saganbyte
+        # Pijabyte
     }
     else {
-        $CurText = "Bytes"
-        $CurNum = $CurBytes
+        # Disk manufacturers and many other calculations use 1000. MB = 1000
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Set variables (based on 1000)."
+        $TextStrings = (
+            'B = Byte',
+            'KB = KiloByte',
+            'MB = MegaByte',
+            'GB = GigaByte',
+            'TB = TeraByte',
+            'PT = PetaByte',
+            'EB = ExaByte',
+            'ZB = ZettaByte',
+            'YB = YottaByte'
+        )
+        $Multiplier = 1000
+        $CurKB = 1000                   # Kilobyte
+        $CurMB = $CurKB * $Multiplier   # Megabyte
+        $CurGB = $CurMB * $Multiplier   # Gigabyte
+        $CurTB = $CurGB * $Multiplier   # Terabyte
+        $CurPB = $CurTB * $Multiplier   # Petabyte
+        $CurEB = $CurPB * $Multiplier   # Exabyte
+        $CurZB = $CurEB * $Multiplier   # Zettabyte
+        $CurYB = $CurZB * $Multiplier   # Yottabyte
+        # Brontobyte
+        # Geopbyte
+        # Saganbyte
+        # Pijabyte
+    }
+
+    #Write-Host $CurFunc '-' $NumberOfBytes
+    Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Calculate value to readable text for output."
+    if (( $NumberOfBytes -lt 1 ) -or ( $NumberOfBytes -gt $Int64Max )) {
+        Write-Warning "$( $CurFunc ) Value is outside the range for PowerShell type 'Long'."
+    }
+    elseif ( $NumberOfBytes -ge $CurYB ) {
+        $CurText = $TextStrings[ 8 ]
+        $CurNum = $NumberOfBytes / $CurYB
+    }
+    elseif ( $NumberOfBytes -ge $CurZB ) {
+        $CurText = $TextStrings[ 7 ]
+        $CurNum = $NumberOfBytes / $CurZB
+    }
+    elseif ( $NumberOfBytes -ge $CurEB ) {
+        $CurText = $TextStrings[ 6 ]
+        $CurNum = $NumberOfBytes / $CurEB
+    }
+    elseif ( $NumberOfBytes -ge $CurPB ) {
+        $CurText = $TextStrings[ 5 ]
+        $CurNum = $NumberOfBytes / $CurPB
+    }
+    elseif ( $NumberOfBytes -ge $CurTB ) {
+        $CurText = $TextStrings[ 4 ]
+        $CurNum = $NumberOfBytes / $CurTB
+    }
+    elseif ( $NumberOfBytes -ge $CurGB ) {
+        $CurText = $TextStrings[ 3 ]
+        $CurNum = $NumberOfBytes / $CurGB
+    }
+    elseif ( $NumberOfBytes -ge $CurMB ) {
+        $CurText = $TextStrings[ 2 ]
+        $CurNum = $NumberOfBytes / $CurMB
+    }
+    elseif ( $NumberOfBytes -ge $CurKB ) {
+        $CurText = $TextStrings[ 1 ]
+        $CurNum = $NumberOfBytes / $CurKB
+    }
+    else {
+        $CurText = $TextStrings[ 0 ]
+        $CurNum = $NumberOfBytes
     }
 
     Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Setup final number text and return the info."
     $CurNum = "{0:N2}" -f $CurNum
-    Return "$( $CurNum ) $( $CurText )"
+    [ PSCustomObject ] @{
+        Value = $CurNum
+        Metric = $CurText
+    }
 }
