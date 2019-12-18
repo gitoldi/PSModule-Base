@@ -112,10 +112,11 @@ function Show-Popup {
     [ CmdletBinding( )]
 
     param (
-        [ Parameter( )]
+        [ Parameter( ParameterSetName = 'Version' )]
         [ Switch ] $Version
         ,
         [ Parameter(
+            ParameterSetName = 'DoPopup',
             Position = 0,
             HelpMessage = 'Enter a message text.'
         )]
@@ -123,18 +124,21 @@ function Show-Popup {
         [ string ] $PopupText = 'Do you want to do continue?'
         ,
         [ Parameter(
+            ParameterSetName = 'DoPopup',
             HelpMessage = "Enter a title for the popup."
         )]
         [ ValidateNotNullorEmpty( )]
         [ string ] $PopupTitle = 'Popup Title.'
         ,
         [ Parameter(
+            ParameterSetName = 'DoPopup',
             HelpMessage = 'How many seconds should the popup show. Default: displays until click.'
         )]
         [ ValidateScript({ $_ -ge 0 })]
         [ int16 ] $PopupDisplaySeconds = 0
         ,
         [ Parameter(
+            ParameterSetName = 'DoPopup',
             HelpMessage = 'Select a button (group). Default: OK.'
         )]
         [ ValidateNotNullorEmpty()]
@@ -150,6 +154,7 @@ function Show-Popup {
         [ string ] $PopupButton = "OK"
         ,
         [ Parameter(
+            ParameterSetName = 'DoPopup',
             HelpMessage = "Enter an icon. Default: Information."
         )]
         [ ValidateNotNullorEmpty( )]
@@ -160,7 +165,7 @@ function Show-Popup {
 
     #Region 'First get name and return version if requested.'
     $ScriptName = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name ) + '(F)'
-    [ version ] $ScriptVersion = '0.9.0'
+    [ version ] $ScriptVersion = '0.9.1'
     Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Test if Version was requested: $( $ScriptVersion )"
     if ( $Version ) {
         Write-Verbose "$ScriptName version : $ScriptVersion"
@@ -201,11 +206,14 @@ function Show-Popup {
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Create the object."
         $wshell = New-Object -ComObject Wscript.Shell
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Create popup and save return value."
+        if ( $PopupDisplaySeconds -gt 0 ) {
+            $PopupText = $PopupText + ' Auto stop after ' + $PopupDisplaySeconds + ' seconds.'
+        }
         $ReturnCode = $wshell.Popup(
             $PopupText,
             $PopupDisplaySeconds,
             $PopupTitle,
-            $PopupValue + $IconValue
+            $PopupValue + $IconValue + 4096
         )
         #EndRegion 'Create object, show popup and save returncode.'
 
