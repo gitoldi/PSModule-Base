@@ -15,6 +15,10 @@ Thoughts:
 * Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath things to consider. See the PowerShell GitHub.
 * Usage should be possible in both *PowerShell* and *PowerShell Core*.
 
+<h2>Prerequisites</h2>
+
+The current ```Build.ps1``` points to an output folder for the final module. In my case to a folder in my ```$env:OneDrive``` location. Make sure that folder exists and preferably the main module folder is in your ```$env:PSModulePath```.
+
 <h2>Some Markdown guides</h2>
 
 * [Markdown guide](https://www.markdownguide.org/basic-syntax/)

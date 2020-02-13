@@ -21,6 +21,11 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.2.9 - 200213</h2>
+
+* *Modified*
+    * Moved the module to OneDrive instead of userprofile.
+
 <h2>0.2.8 - 191129</h2>
 
 * *Modified*
@@ -34,7 +39,7 @@ Links used as reference:
         * Used source: [Gathering Installed Software Using PowerShell] (https://mcpmag.com/articles/2017/07/27/gathering-installed-software-using-powershell.aspx) on MCPMAG.
         * Some tweaking to conform to my personal setup.
 
-<h2>0.2.6 - 191126</h2>
+<h2>0.2.6 - 191126</h2>d
 
 * *Added*
     * Show-Characterline.ps1
