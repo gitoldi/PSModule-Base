@@ -22,6 +22,9 @@ function Convert-Bytes( ) {
     Author      : Marcel Rijsbergen
     History:
 
+    200215 MR
+    - 1.1.5 Modified $NumberOfBytes from 'long' to 'uint64'.
+
     191213 MR
     - 1.0.6 Added explanation megabyte versus mebibyte.
 
@@ -53,7 +56,7 @@ function Convert-Bytes( ) {
 
     param (
         [ Parameter( )] # Mandatory=$true
-        [ Long ] $NumberOfBytes
+        [ uint64 ] $NumberOfBytes
         ,
         [ Switch ] $Version
         ,
@@ -66,7 +69,7 @@ function Convert-Bytes( ) {
     # Set current (sub)routine name.
     #
     $CurFunc = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
-    [ version ] $ScriptVersion = '1.1.4'
+    [ version ] $ScriptVersion = '1.1.5'
     if ( $Version ) {
         Write-Verbose "$CurFunc version : $ScriptVersion"
         Return $ScriptVersion

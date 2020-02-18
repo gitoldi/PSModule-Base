@@ -40,38 +40,58 @@ function Get-Calendar { # Get calendar *ix style.
     .OUTPUTS
     Output (if any)
 
-    .PARAMETER
-    Year
+    .PARAMETER Year
+    Will calculate the month information of a certain year.
+    Can be combined with parameter 'Month'.
+    If parameter 'Month' is not supplied the current month will be used.
 
-    .PARAMETER
-    Month
+    .PARAMETER Month
+    Will calculate the month information of a certain month.
+    Can be combined with parameter 'Year'.
+    If parameter 'Month' is not supplied the current month will be used.
 
-    .PARAMETER
-    Next
+    .PARAMETER Next
+    Will calculate the month information of the next month based on today.
 
-    .PARAMETER
-    Previous
+    .PARAMETER Previous
+    Will calculate the month information of the previous month based on today.
 
     .NOTES
     General notes
     Sources:
     - https://www.vistax64.com/threads/unix-cal-command.17834/
 
+    History:
+
+    200215 MR
+    - Added parameter '$Version'.
+    - Added different parametersetnames to 'Next' and 'Previous' so they cann't be combined with other parameters. 
+
     #>
 
     #Region 'Initialization.'
     [ CmdletBinding( )]
     Param(
+        [ Parameter( ParameterSetName = 'Default' )]
         [ int16 ] $Year = ( Get-Date ).Year,
+
+        [ Parameter( ParameterSetName = 'Default' )]
         [ int16 ] $Month = ( Get-Date ).Month,
+
+        [ Parameter( ParameterSetName = 'Next' )]
         [ Switch ] $Next,
-        [ Switch ] $Previous
+
+        [ Parameter( ParameterSetName = 'Previous' )]
+        [ Switch ] $Previous,
+
+        [ Parameter( ParameterSetName = 'Version' )]
+        [ Switch ] $Version
     )
     #EndRegion 'Initialization.'
 
     #Region 'First get name and return version if requested.'
     $ScriptName = '(F)' + [ io.path ]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
-    [ version ] $ScriptVersion = '0.9.0'
+    [ Version ] $ScriptVersion = '0.9.1'
     if ( $Version ) {
         Write-Verbose "$ScriptName version : $ScriptVersion"
         Return $ScriptVersion
@@ -119,6 +139,7 @@ function Get-Calendar { # Get calendar *ix style.
     if ( $script:err ) {
         return
     }
+    $FirstDayofWeek = $StartDate.DayOfWeek
     $MonthLabel = "$( $StartDate.ToString( 'MMMM' )) $( $StartDate.Year )"
     $AlignCenter = [ Math ]::Ceiling(( 20 - $MonthLabel.Length ) / 2 )
     $TmpText = "`n$( $Space * $AlignCenter )$MonthLabel`n"
@@ -173,6 +194,7 @@ function Get-Calendar { # Get calendar *ix style.
     }
     write-host "`n"
     [ PSCustomObject ]@{
+        FirstDayofWeek = $FirstDayofWeek
         Month = $Month
         Year = $Year
         Next = $Next

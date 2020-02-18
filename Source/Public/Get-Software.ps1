@@ -93,6 +93,10 @@ function Get-Software {
 
     .NOTES
     History:
+    - 200214 MR
+        - V1.1.5 In the 'Begin' part after show version changed 'break' init 'return $scriptversion'.
+        - V1.1.6 Removed the 'begin - process - end' parts. Interfered with proper exit '$version'.
+
     - 191129 MR
         - 1.1.4 Added an object per path that contains all empty/unknown key's.
             Gave them the Displayname 'Unknown'. And the key is ALL the empty/unknown ones.
@@ -123,20 +127,20 @@ function Get-Software {
     #EndRegion 'Initialize.'
 
     #Region 'Block Begin.'
-    Begin {
+    #Begin {
         # Get name and return version if requested.
         $ScriptName = '(F)' + [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Part: Begin."
-        [ version ] $ScriptVersion = '1.1.4'
+        [ version ] $ScriptVersion = '1.1.6'
         if ( $Version ) {
-            Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Test if Version was requested: $( $ScriptVersion )"
-            Break
+            #Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Test if Version was requested: $( $ScriptVersion )"
+            Return $ScriptVersion
         }
-    }
+    #}
     #EndRegion 'Block Begin.'
 
     #Region 'Block Process.'
-    Process {
+    #Process {
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Part: Process."
         [ array ] $NoSoftware = @()
 
@@ -331,12 +335,12 @@ function Get-Software {
             }
         } 
         #EndRegion 'Loop through all computers.'
-    }
+    #}
     #EndRegion 'Block Process.'
 
     #Region 'Block End.'
-    End {
+    #End {
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Part: End."
-    }
+    #}
     #EndRegion 'Block End.'
 }
