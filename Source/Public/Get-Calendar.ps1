@@ -73,17 +73,17 @@ function Get-Calendar { # Get calendar *ix style.
     [ CmdletBinding( )]
     Param(
         [ Parameter( ParameterSetName = 'Default' )]
-        [ int16 ] $Year = ( Get-Date ).Year,
-
+        [ int16 ] $Year = ( Get-Date ).Year
+        ,
         [ Parameter( ParameterSetName = 'Default' )]
-        [ int16 ] $Month = ( Get-Date ).Month,
-
+        [ int16 ] $Month = ( Get-Date ).Month
+        ,
         [ Parameter( ParameterSetName = 'Next' )]
-        [ Switch ] $Next,
-
+        [ Switch ] $Next
+        ,
         [ Parameter( ParameterSetName = 'Previous' )]
-        [ Switch ] $Previous,
-
+        [ Switch ] $Previous
+        ,
         [ Parameter( ParameterSetName = 'Version' )]
         [ Switch ] $Version
     )
