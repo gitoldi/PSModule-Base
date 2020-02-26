@@ -8,8 +8,8 @@ function Show-ModulePath {
     #
     #$tmp = $MyInvocation.MyCommand
     $cnt = 1
-    foreach ( $mpad in ( $env:PSModulePath ).Split( ";" )) {
-        Write-Host 'Path' $cnt '-' $mpad
+    foreach ( $mypath in ( $env:PSModulePath ).Split( ";" )) {
+        Write-Host 'Path' $cnt '-' $mypath
         $cnt++
     }
 }
