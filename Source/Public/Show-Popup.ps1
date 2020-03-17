@@ -105,8 +105,8 @@ function Show-Popup {
 
     #>
 
-    #Requires -Version 5.1
-    #Requires -PSEdition Core, Desktop
+    #NotRequires -Version 5.1
+    #NotRequires -PSEdition Core, Desktop
 
     #Region 'Initialize.'
     [ CmdletBinding( )]
