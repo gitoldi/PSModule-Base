@@ -1,6 +1,6 @@
 @{
     # The module version should be SemVer.org compatible
-    ModuleVersion          = "0.2.10"
+    ModuleVersion          = "0.3.0"
 
     # PrivateData is where all third-party metadata goes
     PrivateData            = @{
@@ -16,10 +16,10 @@
             Tags           = 'Marcel Rijsbergen', 'PowerShell', 'GitHub', 'PowerShell module', 'module'
 
             # A URL to the license for this module.
-            LicenseUri     = 'https://github.com/gitoldi/PSModule-Personal/blob/master/LICENSE' # 'https://github.com/PoshCode/ModuleBuilder/blob/master/LICENSE'
+            LicenseUri     = 'https://github.com/gitoldi/PSModule-Base/blob/master/LICENSE' # 'https://github.com/PoshCode/ModuleBuilder/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri     = 'https://github.com/gitoldi/PSModule-Personal' # 'https://github.com/PoshCode/ModuleBuilder'
+            ProjectUri     = 'https://github.com/gitoldi/PSModule-Base' # 'https://github.com/PoshCode/ModuleBuilder'
 
             # A URL to an icon representing this module.
             IconUri        = '' # 'https://github.com/PoshCode/ModuleBuilder/blob/resources/ModuleBuilder.png?raw=true'
@@ -27,7 +27,7 @@
     } # End of PrivateData
 
     # The main script module that is automatically loaded as part of this module
-    RootModule             = 'PSModule-Personal.psm1'
+    RootModule             = 'PSModule-Base.psm1'
 
     # Modules that must be imported into the global environment prior to importing this module
     RequiredModules        = @(
