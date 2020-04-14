@@ -1,7 +1,7 @@
 @{
     <#
-    File        : PSModule-Personal-Config.psd1
-    Purpose     : Settings for my personal GitHub PowerShell Module.
+    File        : PSModule-Base-Config.psd1
+    Purpose     : Settings for my Base GitHub PowerShell Module.
     Version     : 1.0
     Source      : 
         - https://docs.microsoft.com/en-us/powershell/dsc/configurations/configdata
