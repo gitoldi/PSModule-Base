@@ -24,7 +24,7 @@ Links used as reference:
 <h2>0.3.0 - 200414</h2>
 
 * *Modified*
-    * Renamed from *PSModule-Personal* to *PSModule-Base*..
+    * Renamed from *PSModule-Personal* to *PSModule-Base*.
 
 <h2>0.2.9 - 200213</h2>
 
