@@ -1,5 +1,5 @@
 
-<h1 id='top'>PSModule-Personal</h1>
+<h1 id='top'>PSModule-Base</h1>
 PowerShell - A personal module. Using an already existing one to (partly) migrate to and get familiar with Git.
 
 To see a list of changes in this version, refer to the [Changelog](CHANGELOG.md).
@@ -31,16 +31,16 @@ Requires the already loaded module *ModuleBuilder* as described at the beginning
 
 After you did a
 
-    git clone https://github.com/gitoldi/PSModule-Personal.git
-    set-location PSModule-Personal
+    git clone https://github.com/gitoldi/PSModule-Base.git
+    set-location PSModule-Base
 
 the tree will be created under the current folder you started the command. You might want to modify 'sources\build.psd1'. When running the 'Build-Module' it creates the module in one of the standard PowerShell [ $env:PSModulePath ]( https://docs.microsoft.com/en-us/powershell/developer/module/modifying-the-psmodulepath-installation-path ) folders. 
 
-The default place will be: $( $env:USERPROFILE )\Documents\WindowsPowerShell\Modules\PSModule-Personal
+The default place will be: $( $env:USERPROFILE )\Documents\WindowsPowerShell\Modules\PSModule-Base
 
-If you want the module in another PowerShell (Core) personal, group or system folder you can modify the 'OutputDirectory' variable. For group or system folder make sure you have the proper (admin) rights. The default setup will create the module in the (sub)folders and files in the given top folder 'PSModule-Personal'.
+If you want the module in another PowerShell (Core) personal, group or system folder you can modify the 'OutputDirectory' variable. For group or system folder make sure you have the proper (admin) rights. The default setup will create the module in the (sub)folders and files in the given top folder 'PSModule-Base'.
 
-    PS> Build-Module <full-path-to>\PSModule-Personal\Sources\ -Prefix prefix.ps1 -Suffix suffix.ps1
+    PS> Build-Module <full-path-to>\PSModule-Base\Sources\ -Prefix prefix.ps1 -Suffix suffix.ps1
 
 Now the module is created and you'll find it in the folder as described in the 'build.psd1'. 
 
@@ -52,13 +52,13 @@ Now the module is created and you'll find it in the folder as described in the '
     ----                -------------         ------ ----
     d-----        10/6/2019   5:01 PM                en-US
     d-----        10/6/2019   5:01 PM                nl-NL
-    -a----        10/4/2019   8:27 PM           2479 PSModule-Personal-Config-Template.psd1
-    -a----        10/6/2019   5:01 PM           2493 PSModule-Personal.psd1
-    -a----        10/6/2019   5:01 PM          16747 PSModule-Personal.psm1
+    -a----        10/4/2019   8:27 PM           2479 PSModule-Base-Config-Template.psd1
+    -a----        10/6/2019   5:01 PM           2493 PSModule-Base.psd1
+    -a----        10/6/2019   5:01 PM          16747 PSModule-Base.psm1
 
-* File : PSModule-Personal.psd1
+* File : PSModule-Base.psd1
     * The module manifest file.
-* File : PSModule-Personal.psm1
+* File : PSModule-Base.psm1
     * The module file is created by the *Build-Module* and is the concatenation of:
     * Prefix.ps1
         * As supplied in the *Build-Module* command '-prefix prefix.ps1'.
@@ -68,7 +68,7 @@ Now the module is created and you'll find it in the folder as described in the '
     * Suffix.ps1
         * As supplied in the *Build-Module* command '-suffix suffix.ps1'.
         * e.g. Anything you want to do at the end of importing the module.
-* File : PSModule-Personal-Config-Template.psm1
+* File : PSModule-Base-Config-Template.psm1
     * x
 
 <h1 id='import'>Import module</h1>
@@ -78,7 +78,7 @@ The module must be found in one of the standard module paths for *PowerShell* or
 Since importing modules depends on your personal module tree and setup, in this README I use simple commands.
 Personally I link PowerShell (folder WindowPowerShell and file Microsoft.PowerShell_profile.ps1) and PowerShell Core (folder PowerShell and file Profile.ps1) together.
 
-    PS> Import-Module PSModule-Personal
+    PS> Import-Module PSModule-Base
 
 <h1 id='folderfiles'>Folders and files in this repo</h1>
 
@@ -99,11 +99,11 @@ In the root of the repo:
 
 <h2 id="suffix">Suffix.ps1</h2>
 
-<h2 id="suffix">PSModule-Personal.psd1</h2>
+<h2 id="suffix">PSModule-Base.psd1</h2>
 
-<h2 id="suffix">PSModule-Personal-Config-Template.psd1</h2>
+<h2 id="suffix">PSModule-Base-Config-Template.psd1</h2>
 
-<h2 id="suffix">PSModule-Personal.[On, Off]</h2>
+<h2 id="suffix">PSModule-Base.[On, Off]</h2>
 
 <h1 id='foldersource'>Folder - Source</h1>
 
@@ -132,9 +132,9 @@ This folder contains the main files to create the final module.
     * Used by ModuleBuilder.
     * The contents of this file will be put at the end of the created <module>.psm1 file containing all functions.
     * Here you can do some cleanup or start something after the main part of your module is loaded.
-* File - PSModule-Personal.psd1
+* File - PSModule-Base.psd1
     * The manifest file for the module.
-* File - PSModule-Personal-Config.psd1
+* File - PSModule-Base-Config.psd1
     * An example PowerShell configuration file for a module.
 
 <h2>Subfolder - Private</h2>
