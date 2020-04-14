@@ -1,5 +1,5 @@
 
-<h1 id=top>Changelog for Module PSModule-Personal"</h1>
+<h1 id=top>Changelog for Module PSModule-Base"</h1>
 
 Started to use as many commonly used defaults to setup a Microsoft PowerShell module where changes and readme are part of.  
 Help the PowerShell way is used for sure, but the community also uses some commonly used standards.  
@@ -20,6 +20,11 @@ Links used as reference:
 <h2 id='unrelease'>Unreleased</h2>
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
+
+<h2>0.3.0 - 200414</h2>
+
+* *Modified*
+    * Renamed from *PSModule-Personal* to *PSModule-Base*.
 
 <h2>0.2.9 - 200213</h2>
 
