@@ -13,141 +13,110 @@
 .NOTES
     General notes
 #>
+[ CmdletBinding( )]
+$ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ScriptRoot = Split-Path -Parent $ScriptRoot
+$PesterName = [ io.path ]::GetFileNameWithoutExtension( $myinvocation.mycommand.name )
+$ScriptName = $PesterName -replace '.tests', ''
+$WHColor    = @{
+    ForegroundColor = 'Magenta'
+    BackgroundColor = 'Black'
+}
+Write-Host -Object "$(Get-TimeStamp) $($ScriptName)" @WHColor
 
-#Region 'Test MB - megabyte.'
-Describe 'Test convert bytes using 1000 as multiplier (default) MB = megabyte.' {
-    # Multiplier
-    $Multiplier = 1000
+#region 'Verify Pester version.'
+$PesterVersion = ( Get-Module Pester ).Version
+$PesterMajor = $PesterVersion.Major
+if ( $PesterMajor -ne 4 ) {
+    Write-Warning -Message "$(Get-TimeStamp) $($ScriptName) These test are verified for Pester V4 only."
+    Return
+}
+#endregion 'Verify Pester version.'
 
-    # Tests
-    $TestNum = 1000
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be "1,00"
+#region 'Functions.'
+function DoTestMB {
+    [ CmdletBinding( )]
+    param (
+        [ string ] $ScriptName,
+        [ Int64 ] $TestNum,
+        [ string ] $TestValue,
+        [ string] $TestMetric,
+        [ switch ] $MiB
+    )
+    Describe "Convert $($TestNum) should be" {
+        # Tests
+        if ( $MiB ) {
+            $ReturnValue = & $ScriptName -NumberOfBytes $TestNum -MebiBytes
         }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "KB = KiloByte"
+        else {
+            $ReturnValue = & $ScriptName -NumberOfBytes $TestNum
         }
-    }
-    $TestNum = 1024
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be ( "{0:n2}" -f ( $TestNum / $Multiplier ))
+        It "...Value  : $($TestValue)" {
+            $ReturnValue.Value | Should -Be $TestValue
         }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KB = KiloByte"
-        }
-    }
-    $TestNum = 1025
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum
-    Context "Test $( $TestNum ) - Compare using calculation. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be ( "{0:n2}" -f ( $TestNum / $Multiplier ))
-        }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KB = Kilobyte"
-        }
-    }
-    Context "Test $( $TestNum ) - Compare using string. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be '1,03'
-        }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "KB = Kilobyte"
-        }
-    }
-
-    $TestNum = 1030
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be '1,03'
-        }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KB = KiloByte"
-        }
-    }
-
-    $TestNum = 123456789
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum
-    Context "Test $( $TestNum ) - Compare using string. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be "123,46"
-        }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "MB = MegaByte"
+        It "...Metric : $($TestMetric)" {
+            $ReturnValue.Metric | Should -Be $TestMetric
         }
     }
 }
-#EndRegion 'Test MB - megabyte.'
+#endregion 'Functions.'
 
-#Region 'Test MiB - mebibyte.'
-Describe 'Test convert bytes using 1024 as multiplier (mostly for memory) MiB = mebibyte.' {
-    # Multiplier
-    $Multiplier = 1024
+#region 'Test MB - MegaByte.'
+[int] $MyMultiplier = 1000
+Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Convert bytes using multiplier: $($MyMultiplier)" @WHColor
+# 1.000
+DoTestMB $ScriptName $MyMultiplier "1,00" "KB = KiloByte"
+# 1.024
+DoTestMB $ScriptName ( $MyMultiplier + 24 ) "1,02" "KB = KiloByte"
+# 1.025
+DoTestMB $ScriptName ( $MyMultiplier + 25 ) "1,02" "KB = KiloByte"
+# 1.026
+DoTestMB $ScriptName ( $MyMultiplier + 26 ) "1,03" "KB = KiloByte"
+# 1.000.000
+DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier ) "1,00" "MB = MegaByte"
+# 1.000.000.000
+DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "GB = GigaByte"
+# 1.000.000.000.000
+DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "TB = TeraByte"
+# 1.000.000.000.000.000
+DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "PT = PetaByte"
+# 1.000.000.000.000.000.000
+DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "EB = ExaByte"
+# 123.456.789
+DoTestMB $ScriptName 123456789 "123,46" "MB = MegaByte"
+#endregion 'Test MB - megabyte.'
 
-    # Tests
-    $TestNum = 1000
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum -MebiBytes
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be "1.000,00"
-        }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "B = Byte"
-        }
-    }
-    $TestNum = 1024
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum -MebiBytes
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be ( "{0:n2}" -f ( $TestNum / $Multiplier ))
-        }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KiB = KibiByte"
-        }
-    }
-    $TestNum = 1025
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum -MebiBytes
-    Context "Test $( $TestNum ) - Compare using calculation. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be ( "{0:n2}" -f ( $TestNum / $Multiplier ))
-        }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KiB = KibiByte"
-        }
-    }
-    Context "Test $( $TestNum ) - Compare using string. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be '1,00'
-        }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "KiB = KibiByte"
-        }
-    }
-
-    $TestNum = 1030
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum -MebiBytes
-    Context "Test $( $TestNum ) -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It '...Value' {
-            $ReturnValue.Value | Should Be '1,01'
-        }
-        It '...Metric' {
-            $ReturnValue.Metric | Should Be "KiB = KibiByte"
-        }
-    }
-
-    $TestNum = 123456789
-    $ReturnValue = Convert-Bytes -NumberOfBytes $TestNum -MebiBytes
-    Context "Test $( $TestNum ) - Compare using string. -> $( $ReturnValue.Value ) $( $ReturnValue.Metric )" {
-        It "...Value" {
-            $ReturnValue.Value | Should Be "117,74"
-        }
-        It "...Metric" {
-            $ReturnValue.Metric | Should Be "MiB = MebiByte"
-        }
-    }
+#region 'Test MiB - MebiByte.'
+Write-Host -Object "  $( '-' * 40 )"
+# Multiplier
+$MyMultiplier = 1024
+Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Convert binary using multiplier: $($MyMultiplier)" @WHColor
+$PropsMib = @{
+    Mib = $true
+    ScriptName = $ScriptName
 }
-#EndRegion 'Test MiB - mebibyte.'
+# 1.000
+DoTestMB @PropsMib 1000 "1.000,00" "B = Byte"
+# 1.024
+DoTestMB @PropsMib $MyMultiplier "1,00" "KiB = KibiByte"
+# 1.024
+DoTestMB @PropsMib ( $MyMultiplier + 24 ) "1,02" "KiB = KibiByte"
+# 1.025
+DoTestMB @PropsMib ( $MyMultiplier + 25 ) "1,02" "KiB = KibiByte"
+# 1.026
+DoTestMB @PropsMib ( $MyMultiplier + 26 ) "1,03" "KiB = KibiByte"
+# 1.000.000
+DoTestMB @PropsMib ( $MyMultiplier * $MyMultiplier ) "1,00" "MiB = MebiByte"
+# 1.000.000.000
+DoTestMB @PropsMib ( $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "GiB = GibiByte"
+# 1.000.000.000.000
+DoTestMB @PropsMib ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "TiB = TebiByte"
+# 1.000.000.000.000.000
+DoTestMB @PropsMib ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "PiB = PebiByte"
+# 1.000.000.000.000.000.000
+DoTestMB @PropsMib ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "EiB = ExbiByte"
+# 123.456.789
+DoTestMB @PropsMib 123456789 "117,74" "MiB = MebiByte"
+#endregion 'Test MiB - MebiByte.'
+
+Write-Host -Object "  $( '-' * 40 )"
