@@ -32,19 +32,23 @@ Do not forget to create a short modification text in CHANGELOG.md.
 #>
 
 #Region 'Initialize.'
+
 [ CmdletBinding( )]
 
 param( )
 
-$CurCommand = $MyInvocation.MyCommand
-$ScriptName = [ io.path ]::GetFileNameWithoutExtension( $CurCommand.Name )
+$CurCommand   = $MyInvocation.MyCommand
+$ScriptName   = [ io.path ]::GetFileNameWithoutExtension( $CurCommand.Name )
 $ScriptFolder = Split-Path $CurCommand.Path
-[ bool ] $CurDebug = $false
-[ bool ] $IsVerbose = $false
+#TODO Find a way to check language for local name of 'Documents'.
+         $FolderRoot   = Join-Path -Path $env:OneDrive -ChildPath 'Documenten'
+         $FolderConfig = Join-Path -Path $FolderRoot -ChildPath 'Config'
+[ bool ] $CurDebug     = $false
+[ bool ] $IsVerbose    = $false
 
 #Region : 'Check if Verbose file is set.'
 $VerboseFile = $ScriptFolder + '\' + $ScriptName + '.On'
-if ( Test-Path $VerboseFile ){
+if ( Test-Path $VerboseFile ) {
     $CurDebug = $true
 }
 #EndRegion : 'Check if Verbose file is set.'
@@ -96,20 +100,67 @@ if ( $CurDebug ) { Write-Host "$( Get-TimeStamp ) $( $ScriptName ) INFO Loading 
 #Region 'Test for config and read it.'
 $Curdir = Get-Location
 if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Current folder : $( $curdir )" }
-$ConfigFile = $ScriptFolder + '\' + $ScriptName + '-Config.psd1'
+$ConfigFile = $FolderConfig + '\Config-' + $ScriptName + '.psd1'
 $ConfigName = $ScriptName -replace '[-_]',''
 if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Try Config file : $( $ConfigFile )" }
 if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Set Config variable : $( $ConfigName )" }
 if ( Test-Path $ConfigFile ) {
     try {
-        $setvarhash = @{
-            Name = "Config.$( $ConfigName )"
-            Value = ( Import-PowerShellDataFile -Path $ConfigFile )
+        $CurConfig = "Config.$( $ConfigName )"
+        $SetVarHash = @{
+            Name        = $CurConfig
+            Value       = ( Import-PowerShellDataFile -Path $ConfigFile )
             Description = "Configuration for module $( $ScriptName )"
         }
-        Set-Variable -Scope Global @setvarhash
+        Set-Variable -Scope Global @SetVarHash
         if ( $CurDebug ) {
-            Write-Host "$( Get-TimeStamp) $ScriptName INFO Config loaded into : $( Get-Variable $ConfigFile )" -ForegroundColor Green
+            Write-Host "$( Get-TimeStamp) $ScriptName INFO Config loaded into : $($CurConfig)" -ForegroundColor Green
+        }
+        try {
+            $ThisConfig = ( Get-Variable $CurConfig ).Value
+            if ( $ThisConfig.Folders ) {
+                if ( $CurDebug ) {
+                    Write-Host "$( Get-TimeStamp) $ScriptName INFO Config found for folders, process."
+                    Write-Host "$( Get-TimeStamp) $ScriptName INFO Test folders."
+                }
+                else {
+                    write-Host "$( Get-TimeStamp) $ScriptName INFO Process folder" -NoNewline
+                }
+                foreach ( $TestFolder in $ThisConfig.Folders ) {
+                    $ThisFolder = Join-Path -Path $FolderRoot -ChildPath $TestFolder
+                    if ( $CurDebug ) {
+                        Write-Host "$( Get-TimeStamp) $ScriptName INFO Process folder : $( $ThisFolder )"
+                    }
+                    $ThisStatus = 'none'
+                    if ( Test-Path -Path $ThisFolder ) {
+                        if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Folder exists." }
+                        $ThisStatus = 'exists'
+                        Set-Variable -Name "Folder$($TestFolder)" -Value "$($ThisFolder)" -Scope Global
+                    }
+                    else {
+                        if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Folder does NOT exists." }
+                        try {
+                            if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Create folder." }
+                            New-Item -Path $ThisFolder -ItemType Directory -ErrorAction Stop
+                            if ( $CurDebug ) { Write-Host "$( Get-TimeStamp) $ScriptName INFO Created folder." }
+                            Set-Variable -Name "Folder$($TestFolder)" -Value "$($ThisFolder)" -Scope Global
+                            $ThisStatus = 'create - success'
+                        }
+                        catch {
+                            if ( $CurDebug ) { Write-Warning -Message "$( Get-TimeStamp) $ScriptName INFO Error creating folder." }
+                            $ThisStatus = 'create - failed'
+                        }
+                    }
+                    if ( -NOT ( $CurDebug )) { Write-Host " - $( $TestFolder ) ($( $ThisStatus ))" -NoNewline }
+                }
+                if ( -NOT ( $CurDebug )) { Write-Host '' }
+            }
+            else {
+                Write-Warning -Message "$( Get-TimeStamp ) $( $ScriptName ) WARNING No config found for 'Folders'."
+            }
+        }
+        catch {
+            #
         }
     } catch {
         if ( $CurDebug ) {
