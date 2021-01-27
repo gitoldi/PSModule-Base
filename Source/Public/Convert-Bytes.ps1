@@ -22,26 +22,37 @@ function Convert-Bytes( ) {
     Author      : Marcel Rijsbergen
     History:
 
-    200215 MR
-    - 1.1.5 Modified $NumberOfBytes from 'long' to 'uint64'.
+    210127 MR 1.2.0
+    - Added more Write-Verbose.
 
-    191213 MR
-    - 1.0.6 Added explanation megabyte versus mebibyte.
+    200215 MR 1.1.5
+    - Modified $NumberOfBytes from 'long' to 'uint64'.
 
-    190512 MR
-    - 1.0.5 Changed version to 3 deep.
+    191213 MR 1.0.6
+    - Added explanation megabyte versus mebibyte.
 
-    190512 MR
-    - 1.0.4.0 Minor internal changes, like modify and/or remove spaces in comments.
-              Added verbose messages.
+    190512 MR 1.0.5
+    - Changed version to 3 deep.
 
-    190502 MR
-    - 1.0.3.0 Modified the fixed number for 64 bit number to a variable.
-              $Int32Max, $Int64Max
-    - 1.0.2.0 Added text of numbers greater than zetta.
-    - 1.0.1.0 Added KiB.
-    - 1.0.0.1 Added switch Version.
-    - 0.9.3.0 Modified Version layout.
+    190512 MR 1.0.4.0
+    - Minor internal changes, like modify and/or remove spaces in comments.
+    - Added verbose messages.
+
+    190502 MR 1.0.3.0
+    - Modified the fixed number for 64 bit number to a variable.
+    - $Int32Max, $Int64Max
+
+    19MMDD MR 1.0.2.0
+    - Added text of numbers greater than zetta.
+
+    19MMDD MR 1.0.1.0
+    - Added KiB.
+
+    19MMDD MR 1.0.0.1
+    - Added switch Version.
+
+    19MMDD MR 0.9.3.0
+    - Modified Version layout.
 
     18MMDD MR
     - Already in use for some time.
@@ -69,7 +80,7 @@ function Convert-Bytes( ) {
     # Set current (sub)routine name.
     #
     $CurFunc = [io.path]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
-    [ version ] $ScriptVersion = '1.1.5'
+    [ version ] $ScriptVersion = '1.2.0'
     if ( $Version ) {
         Write-Verbose "$CurFunc version : $ScriptVersion"
         Return $ScriptVersion
@@ -148,38 +159,47 @@ function Convert-Bytes( ) {
     }
     elseif ( $NumberOfBytes -ge $CurYB ) {
         $CurText = $TextStrings[ 8 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurYB
     }
     elseif ( $NumberOfBytes -ge $CurZB ) {
         $CurText = $TextStrings[ 7 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurZB
     }
     elseif ( $NumberOfBytes -ge $CurEB ) {
         $CurText = $TextStrings[ 6 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurEB
     }
     elseif ( $NumberOfBytes -ge $CurPB ) {
         $CurText = $TextStrings[ 5 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurPB
     }
     elseif ( $NumberOfBytes -ge $CurTB ) {
         $CurText = $TextStrings[ 4 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurTB
     }
     elseif ( $NumberOfBytes -ge $CurGB ) {
         $CurText = $TextStrings[ 3 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurGB
     }
     elseif ( $NumberOfBytes -ge $CurMB ) {
         $CurText = $TextStrings[ 2 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurMB
     }
     elseif ( $NumberOfBytes -ge $CurKB ) {
         $CurText = $TextStrings[ 1 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes / $CurKB
     }
     else {
         $CurText = $TextStrings[ 0 ]
+        Write-Verbose "$( Get-TimeStamp ) $( $CurFunc ) Convert to '$($CurText)'."
         $CurNum = $NumberOfBytes
     }
 

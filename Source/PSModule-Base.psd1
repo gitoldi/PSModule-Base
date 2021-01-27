@@ -40,7 +40,7 @@
     # ID used to uniquely identify this module
     # GUID created 191004 MR.
     GUID                   = '19e690f4-6c92-4b96-ad0e-9d9fabe54cf5'
-    Description            = 'A module for some Snow Software checks.'
+    Description            = 'A module for some base functions.'
 
     # Common stuff for all our modules:
     CompanyName            = 'Private'
