@@ -23,6 +23,6 @@ Describe "Test function : $($ScriptName)" {
         $PesterStamp = Get-Date -UFormat "%Y%m%d-%H%M%S"
         $FuncStamp = Get-TimeStamp
         $FuncTest = $FuncStamp.Split( "." )
-        $FuncTest[0] | Should BeExactly $PesterStamp
+        $FuncTest[0] | Should -BeExactly $PesterStamp
     }
 }
