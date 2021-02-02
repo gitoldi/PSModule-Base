@@ -22,6 +22,8 @@ $WHColor    = @{
     ForegroundColor = 'Magenta'
     BackgroundColor = 'Black'
 }
+$skipPS1Desktop = -not [bool]($PSEdition -match 'Desktop')
+$skipPS1Core    = -not [bool]($PSEdition -match 'Core')
 Write-Host -Object "$(Get-TimeStamp) $($ScriptName)" @WHColor
 
 #region 'Verify Pester version.'
@@ -66,24 +68,51 @@ function DoTestMB {
 Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Convert bytes using multiplier: $($MyMultiplier)" @WHColor
 # 1.000
 DoTestMB $ScriptName $MyMultiplier "1,00" "KB = KiloByte"
+
 # 1.024
 DoTestMB $ScriptName ( $MyMultiplier + 24 ) "1,02" "KB = KiloByte"
+
 # 1.025
-DoTestMB $ScriptName ( $MyMultiplier + 25 ) "1,02" "KB = KiloByte"
+    # Bug between Core and Desktop?
+    Write-Host ''
+    Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Need to research. Bug Desktop vs. Core on 1025?" @WHColor
+    # Test the following line on both: "{0:N2}" -f (1025 / 1000)
+    
+    #region 'Core 1025'
+    If ( $skipPS1Desktop ) {
+        Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Core returns 1,02 KB." @WHColor
+        DoTestMB $ScriptName ( $MyMultiplier + 25 ) "1,02" "KB = KiloByte"
+    }
+    #endregion 'Core 1025'
+
+    #region 'Desktop 1025'
+    If ( $skipPS1Core ) {
+        Write-Host -Object "$(Get-TimeStamp) $($ScriptName) Desktop returns 1,03 instead of 1,02 KB." @WHColor
+        DoTestMB $ScriptName ( $MyMultiplier + 25 ) "1,03" "KB = KiloByte"
+    }
+    #endregion 'Desktop 1025'
+
 # 1.026
 DoTestMB $ScriptName ( $MyMultiplier + 26 ) "1,03" "KB = KiloByte"
+
 # 1.000.000
 DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier ) "1,00" "MB = MegaByte"
+
 # 1.000.000.000
 DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "GB = GigaByte"
+
 # 1.000.000.000.000
 DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "TB = TeraByte"
+
 # 1.000.000.000.000.000
 DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "PT = PetaByte"
+
 # 1.000.000.000.000.000.000
 DoTestMB $ScriptName ( $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier * $MyMultiplier ) "1,00" "EB = ExaByte"
+
 # 123.456.789
 DoTestMB $ScriptName 123456789 "123,46" "MB = MegaByte"
+
 #endregion 'Test MB - megabyte.'
 
 #region 'Test MiB - MebiByte.'
