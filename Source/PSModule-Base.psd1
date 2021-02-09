@@ -3,7 +3,7 @@
     RootModule             = 'PSModule-Base.psm1'
 
     # The module version should be SemVer.org compatible
-    ModuleVersion          = "0.3.2"
+    ModuleVersion          = "0.3.4"
 
     # ID used to uniquely identify this module
     # GUID created 191004 MR.
