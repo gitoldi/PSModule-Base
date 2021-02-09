@@ -20,6 +20,14 @@ Links used as reference:
 
 * Create and use *module-name.[On, Off]* file for 'write-host' usage because 'write-verbose' doesn't work during 'import-module'.
 
+<h2>0.3.4 - 210209</h2>
+
++ _Modified_
+  + Show-ModulePath.ps1
+    + Added Parameter 'Version'.
+  + Test-WriteProgress.psd1
+    + Added Parameter 'Version'.
+
 <h2>0.3.3 - 210127</h2>
 
 Some old modifications on home system that require merge first before i can continue.
