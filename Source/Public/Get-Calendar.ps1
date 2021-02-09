@@ -90,7 +90,7 @@ function Get-Calendar { # Get calendar *ix style.
     #EndRegion 'Initialization.'
 
     #Region 'First get name and return version if requested.'
-    $ScriptName = '(F)' + [ io.path ]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
+    $ScriptName = [ io.path ]::GetFileNameWithoutExtension( $MyInvocation.MyCommand.Name )
     [ Version ] $ScriptVersion = '0.9.1'
     if ( $Version ) {
         Write-Verbose "$ScriptName version : $ScriptVersion"
