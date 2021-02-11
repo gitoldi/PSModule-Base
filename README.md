@@ -9,7 +9,7 @@ To see a list of changes in this version, refer to the [Changelog](CHANGELOG.md)
 * Setup and use GitHub.
 * Get familiar with and use [ModuleBuilder](https://github.com/PoshCode/ModuleBuilder) to prepare to create a module.
     * A way of working to enable building a <module>.psm1 and use versioning (if required).
-* So this repo only contains the files to *build* the module.
+* So this repo only contains the files to *build* the module. You need to get familiar with _ModuleBuilder_ and (re)create the module in your own environment.
 
 Thoughts:
 * Keep an eye on the [PSModulePath issue](https://github.com/PowerShell/PowerShell/issues/6850) between PowerShell and PowerShell Core. So putting modules in a 'fixed' place and loading them might need tweaking in your personal environment. There are more PSModulePath things to consider. See the PowerShell GitHub.
