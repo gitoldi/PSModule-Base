@@ -92,7 +92,7 @@ function Get-CommandVersion {
     foreach ( $TmpModule in $Modules ) {
         Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) INFO Process module : $( $TmpModule )"
         [ version ] $ModVersion = ( Get-Module $TmpModule ).Version
-        foreach ( $TmpCmd in ( Get-Command -Module $TmpModule )) {
+        foreach ( $TmpCmd in ( Get-Command -Module $TmpModule | Where-Object { $_.CommandType -ne 'alias' } )) {
             Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) ...Command : $( $TmpCmd )"
             $TmpVersion = '0.0.0'
             $TpmError = ''
@@ -109,7 +109,7 @@ function Get-CommandVersion {
             Write-Verbose "$( Get-TimeStamp ) $( $ScriptName ) ......$( $TmpVersion ) - $( $TmpError )"
             [ PSCustomObject ] @{
                 "Source (version)" = "$TmpModule ($($ModVersion ))"
-                Name = $TmpCmd
+                Name = $TmpCmd.Name
                 Version = $TmpVersion
                 Error = $TpmError
             }
