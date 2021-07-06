@@ -1,9 +1,9 @@
 @{
     # The main script module that is automatically loaded as part of this module
-    RootModule             = 'PSModule-Base.psm1'
+    RootModule             = 'PSModule.Base.psm1'
 
     # The module version should be SemVer.org compatible
-    ModuleVersion          = "0.3.4"
+    ModuleVersion          = "0.4.0"
 
     # ID used to uniquely identify this module
     # GUID created 191004 MR.
@@ -48,10 +48,10 @@
             Tags           = 'Marcel Rijsbergen', 'PowerShell', 'GitHub', 'PowerShell module', 'module'
 
             # A URL to the license for this module.
-            LicenseUri     = 'https://github.com/gitoldi/PSModule-Base/blob/master/LICENSE' # 'https://github.com/PoshCode/ModuleBuilder/blob/master/LICENSE'
+            LicenseUri     = 'https://github.com/gitoldi/PSModule.Base/blob/master/LICENSE' # 'https://github.com/PoshCode/ModuleBuilder/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri     = 'https://github.com/gitoldi/PSModule-Base' # 'https://github.com/PoshCode/ModuleBuilder'
+            ProjectUri     = 'https://github.com/gitoldi/PSModule.Base' # 'https://github.com/PoshCode/ModuleBuilder'
 
             # A URL to an icon representing this module.
             # 'https://github.com/PoshCode/ModuleBuilder/blob/resources/ModuleBuilder.png?raw=true'

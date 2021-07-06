@@ -386,11 +386,11 @@ function Invoke-TSPingSweep {
 
             Write-Verbose -Message "$( Get-TimeStamp ) $( $ScriptName ) INFO End."
             [PSCustomObject]@{
-                Nodes    = $NodesAll
-                Found    = $NodesFound
-                Failed   = $NodesFailed
-                Total    = $NodesTotal
-                TimeDiff = $TimeDiff
+                Nodes   = $NodesAll
+                Found   = $NodesFound
+                Failed  = $NodesFailed
+                Total   = $NodesTotal
+                RunTime = $TimeDiff
             }
         }
     } 
